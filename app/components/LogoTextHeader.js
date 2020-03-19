@@ -47,7 +47,7 @@ const styles = StyleSheet.create({
     marginLeft: 20,
     fontSize: 50,
     color: '#fff',
-    fontFamily: 'OctagenRoman',
+    // fontFamily: 'OctagenRoman',
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
     textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 20,

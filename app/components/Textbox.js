@@ -25,7 +25,7 @@ const Textbox = (props) => {
       <TextboxLabel text={label} />
       <TextInput
         theme={theme}
-        style={styles.textbox}
+        // style={styles.textbox}
         secureTextEntry={secureTextEntry}
         placeholder={placeholder}
         value={value}
@@ -42,7 +42,6 @@ const Textbox = (props) => {
 };
 
 const theme = {
-  fonts: { regular: 'Montserrat-Regular' },
   roundness: 30,
 };
 

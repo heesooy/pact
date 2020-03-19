@@ -29,7 +29,6 @@ const styles = StyleSheet.create({
   text: {
     color: PRIMARY_COLOR,
     fontSize: 13,
-    fontFamily: 'Montserrat-Bold',
   },
 });
 

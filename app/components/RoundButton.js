@@ -1,13 +1,17 @@
 import React from 'react';
-import { Button } from 'react-native-paper';
-import {
-  StyleSheet,
-  View,
-} from 'react-native';
-import { PRIMARY_COLOR } from '../config/theme';
+import {Button} from 'react-native-paper';
+import {StyleSheet, View} from 'react-native';
+import {PRIMARY_COLOR} from '../config/theme';
+import {Icon} from 'react-native-elements';
 
 const RoundButton = ({
-  onPress, mode, title, icon, style, contentStyle, containerStyle,
+  onPress,
+  mode,
+  title,
+  icon,
+  style,
+  contentStyle,
+  containerStyle,
 }) => {
   return (
     <View style={[styles.container, containerStyle]}>
@@ -19,11 +23,9 @@ const RoundButton = ({
         uppercase={false}
         style={[styles.button, style]}
         contentStyle={[styles.buttonContent, contentStyle]}
-        icon={icon}
-      >
+        icon={icon}>
         {title}
       </Button>
-
     </View>
   );
 };
@@ -47,7 +49,6 @@ const styles = StyleSheet.create({
     borderColor: PRIMARY_COLOR,
     elevation: 0,
   },
-
 });
 
 export default RoundButton;
