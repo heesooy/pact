@@ -96,4 +96,7 @@ const mapDispatchToProps = {
   pactUpdate,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(Home);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Home);

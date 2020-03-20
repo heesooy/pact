@@ -185,4 +185,7 @@ const mapDispatchToProps = {
   editPactDelete,
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(EditPact);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(EditPact);

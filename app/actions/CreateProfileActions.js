@@ -6,31 +6,31 @@ import {
   CREATE_PROFILE_SUCCESS,
   CREATE_PROFILE_FAIL,
 } from './types';
-import { loginSetMessage } from './LoginActions';
+import {loginSetMessage} from './LoginActions';
 import NavigationService from '../config/NavigationService';
 
-export const createProfileFirstnameChanged = (text) => {
+export const createProfileFirstnameChanged = text => {
   return {
     type: CREATE_PROFILE_FIRSTNAME_CHANGED,
     payload: text,
   };
 };
 
-export const createProfileLastnameChanged = (text) => {
+export const createProfileLastnameChanged = text => {
   return {
     type: CREATE_PROFILE_LASTNAME_CHANGED,
     payload: text,
   };
 };
 
-export const createProfileUsernameChanged = (text) => {
+export const createProfileUsernameChanged = text => {
   return {
     type: CREATE_PROFILE_USERNAME_CHANGED,
     payload: text,
   };
 };
 
-const validateInput = ({ firstname, lastname, username }) => {
+const validateInput = ({firstname, lastname, username}) => {
   // Names can only contain alphabet characters and dashes
   const nameRegex = /^[a-z-]+$/i;
   if (!nameRegex.test(firstname) || !nameRegex.test(lastname)) {
@@ -51,16 +51,15 @@ const validateInput = ({ firstname, lastname, username }) => {
   return true;
 };
 
-export const createProfileSubmit = ({ firstname, lastname, username }) => {
-  return (dispatch) => {
-    dispatch({ type: CREATE_PROFILE_SUBMIT });
+export const createProfileSubmit = ({firstname, lastname, username}) => {
+  return dispatch => {
+    dispatch({type: CREATE_PROFILE_SUBMIT});
     createProfileSuccess(dispatch);
   };
-
 };
 
-const createProfileSuccess = (dispatch) => {
-  dispatch({ type: CREATE_PROFILE_SUCCESS });
+const createProfileSuccess = dispatch => {
+  dispatch({type: CREATE_PROFILE_SUCCESS});
 
   NavigationService.navigate('Home');
 };

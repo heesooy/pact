@@ -1,20 +1,24 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, ScrollView } from 'react-native';
+import React, {Component} from 'react';
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  ScrollView,
+} from 'react-native';
 import PropTypes from 'prop-types';
-import { Icon } from 'react-native-elements';
-import { BACKGROUND_COLOR } from '../config/theme';
+import {Icon} from 'react-native-elements';
+import {BACKGROUND_COLOR} from '../config/theme';
 import FriendCard from '../components/FriendCard';
 
 class Friends extends Component {
-  static navigationOptions = ({ navigation }) => {
+  static navigationOptions = ({navigation}) => {
     return {
       headerRight: () => (
-        <TouchableOpacity onPress={navigation.getParam('addPressed')} style={{ marginRight: 20 }}>
-          <Icon
-            name="add"
-            type="material"
-            color="#7E7E7E"
-          />
+        <TouchableOpacity
+          onPress={navigation.getParam('addPressed')}
+          style={{marginRight: 20}}>
+          <Icon name="add" type="material" color="#7E7E7E" />
         </TouchableOpacity>
       ),
     };
@@ -26,26 +30,23 @@ class Friends extends Component {
   }
 
   componentDidMount() {
-    this.props.navigation.setParams({ addPressed: this.addPressed });
+    this.props.navigation.setParams({addPressed: this.addPressed});
   }
 
   addPressed() {
-    const { navigation } = this.props;
+    const {navigation} = this.props;
     navigation.navigate('AddFriends');
   }
 
   render() {
     return (
       <ScrollView contentContainerStyle={styles.container}>
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
-        <FriendCard onPress={this.addPressed} title="Heesoo Yang" subtitle="m1necraferr256" initials="HY" />
+        <FriendCard
+          onPress={this.addPressed}
+          title="Heesoo Yang"
+          subtitle="m1necraferr256"
+          initials="HY"
+        />
       </ScrollView>
     );
   }
