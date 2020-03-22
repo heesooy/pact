@@ -1,10 +1,9 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import CircleIndicator from '../CircleIndicator/CircleIndicator';
 import styles from './styles';
 
-const ActivityCircles = ({onPress, style, label}) => {
-  return (
+const ActivityCircles = ({ onPress, style, label }) => (
     <View style={[styles.container, style]}>
       <Text style={styles.text}>{label}</Text>
       <View style={[styles.circles, style]}>
@@ -17,7 +16,6 @@ const ActivityCircles = ({onPress, style, label}) => {
         <CircleIndicator text="S" onPress={onPress} active checked />
       </View>
     </View>
-  );
-};
+);
 
 export default ActivityCircles;

@@ -1,6 +1,6 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { BACKGROUND_COLOR } from '../config/theme';
+import {StyleSheet, Text, View} from 'react-native';
+import {BACKGROUND_COLOR} from '../config/theme';
 
 const AddFriends = () => {
   return (
