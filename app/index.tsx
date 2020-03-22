@@ -1,9 +1,9 @@
 import 'react-native-gesture-handler';
-import React, {Component} from 'react';
-import {YellowBox} from 'react-native';
-import {DefaultTheme, Provider as PaperProvider} from 'react-native-paper';
+import React, { Component } from 'react';
+import { YellowBox } from 'react-native';
+import { DefaultTheme, Provider as PaperProvider } from 'react-native-paper';
 import AppContainer from './config/routes';
-import {PRIMARY_COLOR} from './config/theme';
+import { PRIMARY_COLOR } from './config/theme';
 import NavigationService from './config/NavigationService';
 
 class App extends Component {
@@ -16,7 +16,7 @@ class App extends Component {
     return (
       <PaperProvider theme={theme}>
         <AppContainer
-          ref={navigatorRef => {
+          ref={(navigatorRef) => {
             NavigationService.setTopLevelNavigator(navigatorRef);
           }}
         />

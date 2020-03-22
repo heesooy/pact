@@ -1,18 +1,16 @@
 import React from 'react';
-import {StyleSheet, View, Text} from 'react-native';
+import { View, Text } from 'react-native';
 import styles from './styles';
 
-const TextboxLabel = props => {
-  const {text} = props;
-  if (!text) {
-    return null;
-  }
+type Props = {
+  /** text for the label */
+  text: string;
+}
 
-  return (
-    <View style={styles.container}>
-      <Text style={styles.text}>{text}</Text>
-    </View>
-  );
-};
+const TextboxLabel: React.FC<Props> = ({ text }) => (
+  <View style={styles.container}>
+    <Text style={styles.text}>{text}</Text>
+  </View>
+);
 
 export default TextboxLabel;

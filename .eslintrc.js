@@ -23,6 +23,7 @@ module.exports = {
     'import/extensions': 0,
     'react/prop-types': 0,
     'indent': 0,
-    "@typescript-eslint/indent": ["error", 2]
+    '@typescript-eslint/indent': ['error', 2],
+    '@typescript-eslint/no-var-requires': 0,
   },
 };

@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {PRIMARY_COLOR} from '../../config/theme';
+import { StyleSheet } from 'react-native';
+import { PRIMARY_COLOR } from '../../config/theme';
 
 export default StyleSheet.create({
   container: {
@@ -31,7 +31,7 @@ export default StyleSheet.create({
     color: '#fff',
     // fontFamily: 'OctagenRoman',
     textShadowColor: 'rgba(0, 0, 0, 0.2)',
-    textShadowOffset: {width: 1, height: 1},
+    textShadowOffset: { width: 1, height: 1 },
     textShadowRadius: 20,
   },
 });

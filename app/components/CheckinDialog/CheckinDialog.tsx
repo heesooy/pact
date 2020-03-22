@@ -25,9 +25,13 @@ class CheckinDialog extends React.Component<Props, State> {
     };
   }
 
-  showDialog: (() => void) = () => this.setState({ visible: true });
+  showDialog = (): void => {
+    this.setState({ visible: true });
+  }
 
-  hideDialog: (() => void) = () => this.setState({ visible: false });
+  hideDialog = (): void => {
+    this.setState({ visible: false });
+  }
 
   render(): JSX.Element {
     return (

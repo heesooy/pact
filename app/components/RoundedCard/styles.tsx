@@ -1,5 +1,5 @@
-import {StyleSheet} from 'react-native';
-import {BACKGROUND_COLOR} from '../../config/theme';
+import { StyleSheet } from 'react-native';
+import { BACKGROUND_COLOR } from '../../config/theme';
 
 const circleSize = 110;
 

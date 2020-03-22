@@ -1,39 +1,39 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import DateTimePicker from 'react-native-modal-datetime-picker';
 import TextboxLabel from '../TextboxLabel/TextboxLabel';
 import RoundButton from '../RoundButton/RoundButton';
 
 import styles from './styles';
 
-// https://www.npmjs.com/package/react-native-modal-datetime-picker
-class TimePicker extends Component {
-  constructor(props) {
-    super(props);
+type State = {
+  /** whether the DateTimePicker is visible */
+  isDateTimePickerVisible: boolean;
+};
 
-    this.state = {
-      isDateTimePickerVisible: false,
-    };
+// https://www.npmjs.com/package/react-native-modal-datetime-picker
+class TimePicker extends Component<{}, State> {
+  state = {
+    isDateTimePickerVisible: false,
+  };
+
+  showDateTimePicker = (): void => {
+    this.setState({ isDateTimePickerVisible: true });
   }
 
-  showDateTimePicker = () => {
-    this.setState({isDateTimePickerVisible: true});
-  };
+  hideDateTimePicker = (): void => {
+    this.setState({ isDateTimePickerVisible: false });
+  }
 
-  hideDateTimePicker = () => {
-    this.setState({isDateTimePickerVisible: false});
-  };
-
-  handleDatePicked = date => {
-    console.log('A date has been picked: ', date);
+  handleDatePicked = (date: Date): void => {
     this.hideDateTimePicker();
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <>
         <TextboxLabel text="NOTIFICATION TIME" />
         <RoundButton
-          mode="outline"
+          mode="outlined"
           title="9:00 AM"
           onPress={this.showDateTimePicker}
           style={styles.outlineButton}

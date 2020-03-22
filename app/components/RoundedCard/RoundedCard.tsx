@@ -1,19 +1,24 @@
 import React from 'react';
-import {TouchableRipple, IconButton, Text} from 'react-native-paper';
-import {StyleSheet, View} from 'react-native';
+import { TouchableRipple, Text } from 'react-native-paper';
+import { View } from 'react-native';
 import styles from './styles';
 
-const RoundedCard = ({onPress, text}) => {
-  return (
-    <View style={styles.container}>
-      <TouchableRipple
-        onPress={onPress}
-        style={styles.circle}
-        rippleColor="rgba(0, 0, 0, .32)">
-        <Text style={styles.text}>{text}</Text>
-      </TouchableRipple>
-    </View>
-  );
-};
+type Props = {
+  /** function that is executed when a child component is pressed */
+  onPress: () => void;
+  /** text for the component */
+  text: string;
+}
+
+const RoundedCard: React.FC<Props> = ({ onPress, text }) => (
+  <View style={styles.container}>
+    <TouchableRipple
+      onPress={onPress}
+      style={styles.circle}
+      rippleColor="rgba(0, 0, 0, .32)">
+      <Text style={styles.text}>{text}</Text>
+    </TouchableRipple>
+  </View>
+);
 
 export default RoundedCard;

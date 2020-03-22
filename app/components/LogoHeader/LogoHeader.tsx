@@ -1,17 +1,15 @@
 import React from 'react';
-import {StyleSheet, View, Image} from 'react-native';
+import { View, Image } from 'react-native';
 import styles from './styles';
+import logo from '../../../assets/images/logo.png';
 
-const LogoHeader = props => {
-  const {style} = props;
-  return (
-    <View style={[styles.container, style]}>
-      <Image
-        style={styles.logo}
-        source={require('../../../assets/images/logo.png')}
-      />
-    </View>
-  );
-};
+const LogoHeader: React.FC = () => (
+  <View style={styles.container}>
+    <Image
+      style={styles.logo}
+      source={logo}
+    />
+  </View>
+);
 
 export default LogoHeader;

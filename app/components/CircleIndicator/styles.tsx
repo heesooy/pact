@@ -1,7 +1,7 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
+import { PRIMARY_COLOR } from '../../config/theme';
 
 const circleSize = 30;
-import {PRIMARY_COLOR} from '../../config/theme';
 
 export default StyleSheet.create({
   circle: {
@@ -21,5 +21,8 @@ export default StyleSheet.create({
   text: {
     color: '#FFF',
     fontSize: 16,
+  },
+  icon: {
+    opacity: 1,
   },
 });
