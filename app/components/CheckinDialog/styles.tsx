@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export default StyleSheet.create({
   fab: {
@@ -11,5 +11,8 @@ export default StyleSheet.create({
     marginTop: -35,
     marginBottom: 10,
     marginRight: 10,
+  },
+  dialog: {
+    marginBottom: 10,
   },
 });
