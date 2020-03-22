@@ -1,98 +1,84 @@
 import React, {Component, Fragment} from 'react';
 import {StyleSheet, View, SafeAreaView, StatusBar, Text} from 'react-native';
+import userProfileExists from '../config/auth';
 import {HelperText} from 'react-native-paper';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoHeader from '../components/LogoHeader';
 import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from '../config/theme';
-import {
-  loginEmailChanged,
-  loginPasswordChanged,
-  loginSubmit,
-  loginSetMessage,
-} from '../actions';
 
 class Login extends Component {
   constructor(props) {
     super(props);
-    this.onEmailChange = this.onEmailChange.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
-    this.onLoginPress = this.onLoginPress.bind(this);
-    this.onSignupPress = this.onSignupPress.bind(this);
-    this.onResetPassword = this.onResetPassword.bind(this);
+    this.state = {};
   }
 
   componentDidMount() {}
 
-  onEmailChange(text) {
-    this.props.loginEmailChanged(text);
+  onEmailChange = email => {
+    this.setState({email});
+  };
+
+  onPasswordChange = password => {
+    this.setState({password});
+  };
+
+  loginSuccess(user) {
+    if (userProfileExists(user)) {
+      this.props.navigation.navigate('Home');
+    } else {
+      this.props.navigation.navigate('CreateProfile');
+    }
   }
 
-  onPasswordChange(text) {
-    this.props.loginPasswordChanged(text);
+  loginFail(error) {
+    // TODO: handle
+    // dispatch({
+    //   type: LOGIN_FAIL,
+    //   payload: error.code,
+    // });
   }
 
-  onLoginPress() {
-    const {email, password} = this.props;
-    this.props.loginSubmit({email, password});
-  }
+  onLoginPress = () => {
+    const {email, password} = this.state;
 
-  onSignupPress() {
+    if (true) {
+      this.loginSuccess({});
+    } else {
+      this.loginFail('Incorrect username/password.');
+    }
+  };
+
+  onSignupPress = () => {
     this.props.navigation.navigate('Signup', {
-      email: this.props.email,
+      email: this.state.email,
     });
-  }
+  };
 
-  onResetPassword() {
+  onResetPassword = () => {
     this.props.navigation.navigate('PasswordReset');
-  }
-
-  renderPasswordMessage() {
-    const {error} = this.props;
-
-    return (
-      <View>
-        <HelperText
-          type="error"
-          visible={error === 'auth/wrong-password'}
-          onPress={this.onResetPassword}
-          style={{marginLeft: 15}}>
-          Forgot Password?
-        </HelperText>
-      </View>
-    );
-  }
+  };
 
   renderMessage() {
-    const {error, message, loading} = this.props;
+    const {message, loading} = this.props;
+    const {error} = this.state;
 
-    const text = () => {
-      if (loading) {
-        return 'Signing in...';
-      }
-      if (error === 'auth/user-not-found') {
-        return 'User not found';
-      }
-      return message;
-    };
+    let errorText;
 
-    const type = () => {
-      if (loading) {
-        return 'info';
-      }
-      if (error) {
-        return 'error';
-      }
-      return 'info';
-    };
+    if (loading) {
+      errorText = 'Signing in...';
+    } else {
+      errorText = error === 'auth/user-not-found' ? 'User not found' : message;
+    }
+
+    const messageType = !loading && error ? 'error' : 'info';
 
     return (
       <View style={{alignSelf: 'center', marginBottom: 10}}>
-        <HelperText type={type()} visible={true}>
-          {text()}
+        <HelperText type={messageType} visible={true}>
+          {errorText}
         </HelperText>
       </View>
     );
@@ -135,9 +121,9 @@ class Login extends Component {
               />
               <HelperText
                 type="error"
-                visible={this.props.error === 'auth/wrong-password'}
+                visible={this.state.error === 'auth/wrong-password'}
                 onPress={this.onResetPassword}
-                style={{marginLeft: 15}}>
+                style={styles.wrongPassword}>
                 Forgot Password?
               </HelperText>
             </View>
@@ -175,6 +161,8 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
+    // TODO: remove all hex values
+    // TODO: no unnecessary magic numbers
     backgroundColor: '#FFFFFF',
     paddingLeft: 30,
     paddingRight: 30,
@@ -189,26 +177,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
+  wrongPassword: {
+    marginLeft: 15,
+  },
 });
 
-const mapStateToProps = state => {
-  return {
-    email: state.login.email,
-    password: state.login.password,
-    error: state.login.error,
-    message: state.login.message,
-    loading: state.login.loading,
-  };
-};
-
-const mapDispatchToProps = {
-  loginEmailChanged,
-  loginPasswordChanged,
-  loginSubmit,
-  loginSetMessage,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Login);
+export default Login;

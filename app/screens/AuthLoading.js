@@ -6,11 +6,9 @@ import {
   StatusBar,
   ActivityIndicator,
 } from 'react-native';
-import {connect} from 'react-redux';
 import userProfileExists from '../config/auth';
 import LogoHeader from '../components/LogoHeader';
 import {PRIMARY_COLOR} from '../config/theme';
-import {loginSuccess} from '../actions';
 
 class AuthLoading extends Component {
   componentDidMount() {
@@ -19,7 +17,8 @@ class AuthLoading extends Component {
 
   redirectAsync() {
     if (userProfileExists({})) {
-      loginSuccess(this.props.dispatch, {});
+      // TODO:
+      // loginSuccess(this.props.dispatch, {});
     } else {
       this.props.navigation.navigate('Auth');
     }
@@ -59,4 +58,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect()(AuthLoading);
+export default AuthLoading;

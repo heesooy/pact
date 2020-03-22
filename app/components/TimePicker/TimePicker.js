@@ -9,6 +9,7 @@ import styles from './styles';
 class TimePicker extends Component {
   constructor(props) {
     super(props);
+
     this.state = {
       isDateTimePickerVisible: false,
     };

@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -7,29 +7,18 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import { HelperText } from 'react-native-paper';
-import { connect } from 'react-redux';
+import {HelperText} from 'react-native-paper';
 import PropTypes from 'prop-types';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoTextHeader from '../components/LogoTextHeader';
-import { PRIMARY_COLOR } from '../config/theme';
-import {
-  signupEmailChanged,
-  signupPasswordChanged,
-  signupPasswordConfirmChanged,
-  signupSubmit,
-} from '../actions';
+import {PRIMARY_COLOR} from '../config/theme';
 
 class Signup extends Component {
   constructor(props) {
     super(props);
-    this.onEmailChange = this.onEmailChange.bind(this);
-    this.onPasswordChange = this.onPasswordChange.bind(this);
-    this.onPasswordConfirmChange = this.onPasswordConfirmChange.bind(this);
-    this.onSignupPress = this.onSignupPress.bind(this);
-    this.onBackPress = this.onBackPress.bind(this);
+    this.state = {};
 
     const loginEmail = this.props.navigation.getParam('email', '');
     if (loginEmail !== '') {
@@ -38,33 +27,74 @@ class Signup extends Component {
   }
 
   componentDidMount() {
-    
+    this._mounted = true;
   }
 
-  onEmailChange(text) {
-    this.props.signupEmailChanged(text);
+  componentWillUnmount() {
+    this._mounted = false;
   }
 
-  onPasswordChange(text) {
-    this.props.signupPasswordChanged(text);
-  }
+  onEmailChange = email => {
+    if (this._mounted) {
+      this.setState({email});
+    }
+  };
 
-  onPasswordConfirmChange(text) {
-    this.props.signupPasswordConfirmChanged(text);
-  }
+  onPasswordChange = password => {
+    this.setState({password});
+  };
 
-  // TODO: password must match with confirmation
-  onSignupPress() {
-    const { email, password, passwordConfirm } = this.props;
-    this.props.signupSubmit({ email, password, passwordConfirm });
-  }
+  onPasswordConfirmChange = passwordConfirmation => {
+    this.setState({passwordConfirmation});
+  };
 
-  onBackPress() {
+  signupSuccess(dispatch) {
+    // dispatch({ type: SIGNUP_SUCCESS });
+
+    // Display this message on the login page
+    // dispatch(loginSetMessage('Please verify your email.'));
     this.props.navigation.navigate('Login');
   }
 
+  signupFail(dispatch, error) {
+    // dispatch({
+    //   type: SIGNUP_FAIL,
+    //   payload: error.code,
+    // });
+  }
+
+  // TODO: password must match with confirmation
+  onSignupPress = () => {
+    // const {email, password, passwordConfirmation} = this.state;
+    // return (dispatch) => {
+    //   dispatch({ type: SIGNUP_SUBMIT });
+    //   if (password !== passwordConfirm) {
+    //     signupFail(dispatch, { code: 'password-match' });
+    //     return;
+    //   }
+    // firebase.auth().createUserWithEmailAndPassword(email, password)
+    //   .then(() => {
+    //     firebase.auth().currentUser.sendEmailVerification()
+    //       .then(() => {
+    //         firebase.auth().signOut();
+    //         signupSuccess(dispatch);
+    //       })
+    //       .catch((error) => {
+    //         signupFail(dispatch, error);
+    //       });
+    //   })
+    //   .catch((error) => {
+    //     signupFail(dispatch, error);
+    //   });
+    // };
+  };
+
+  onBackPress = () => {
+    this.props.navigation.navigate('Login');
+  };
+
   renderMessage() {
-    const { error, message, loading } = this.props;
+    const {error, message, loading} = this.props;
 
     const text = () => {
       if (loading) {
@@ -87,7 +117,7 @@ class Signup extends Component {
       }
       return error;
     };
-    
+
     const type = () => {
       if (loading) {
         return 'info';
@@ -99,11 +129,8 @@ class Signup extends Component {
     };
 
     return (
-      <View style={{ alignSelf: 'center' }}>
-        <HelperText
-          type={type()}
-          visible={true}
-        >
+      <View style={{alignSelf: 'center'}}>
+        <HelperText type={type()} visible={true}>
           {text()}
         </HelperText>
       </View>
@@ -111,33 +138,54 @@ class Signup extends Component {
   }
 
   render() {
-    const {
-      email,
-      password,
-      passwordConfirm,
-    } = this.props;
+    const {email} = this.props;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{ flex: 0, backgroundColor: PRIMARY_COLOR }} />
+        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
         <SafeAreaView style={styles.safeArea}>
           <LogoTextHeader text="join pact" />
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.input}>
-              <Textbox label="EMAIL" placeholder="mail@address.com" onChangeText={this.onEmailChange} value={email} keyboardType="email-address" />
-              <Textbox label="PASSWORD" secureTextEntry placeholder="Use 6 or more characters" onChangeText={this.onPasswordChange} value={password} />
-              <Textbox label="CONFIRM PASSWORD" secureTextEntry placeholder="Re-enter password" onChangeText={this.onPasswordConfirmChange} value={passwordConfirm} style={{ marginBottom: 0 }} />
+              <Textbox
+                label="EMAIL"
+                placeholder="mail@address.com"
+                onChangeText={this.onEmailChange}
+                value={email}
+                keyboardType="email-address"
+              />
+              <Textbox
+                label="PASSWORD"
+                // secureTextEntry
+                placeholder="Use 6 or more characters"
+                onChangeText={this.onPasswordChange}
+              />
+              <Textbox
+                label="CONFIRM PASSWORD"
+                // secureTextEntry
+                placeholder="Re-enter password"
+                onChangeText={this.onPasswordConfirmChange}
+                style={{marginBottom: 0}}
+              />
             </View>
-            <View style={{ height: 4, marginTop: 5, marginBottom: 15 }}>
+            <View style={{height: 4, marginTop: 5, marginBottom: 15}}>
               {this.renderMessage()}
               <RoundSeparator />
             </View>
             <View style={styles.footer}>
-              <RoundButton mode="contained" title="Sign Up" onPress={this.onSignupPress} />
-              <RoundButton mode="outlined" title="Back" onPress={this.onBackPress} />
+              <RoundButton
+                mode="contained"
+                title="Sign Up"
+                onPress={this.onSignupPress}
+              />
+              <RoundButton
+                mode="outlined"
+                title="Back"
+                onPress={this.onBackPress}
+              />
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -173,21 +221,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    email: state.signup.email,
-    password: state.signup.password,
-    passwordConfirm: state.signup.passwordConfirm,
-    error: state.signup.error,
-    loading: state.signup.loading,
-  };
-};
-
-const mapDispatchToProps = {
-  signupEmailChanged,
-  signupPasswordChanged,
-  signupPasswordConfirmChanged,
-  signupSubmit,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Signup);
+export default Signup;

@@ -1,32 +1,41 @@
-import React, { Component } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component} from 'react';
+import {StyleSheet, Text, View} from 'react-native';
 import PropTypes from 'prop-types';
 import RoundButton from '../components/RoundButton';
-import { BACKGROUND_COLOR } from '../config/theme';
-import {
-  profileFetch,
-  profileSignout,
-} from '../actions';
+import {BACKGROUND_COLOR} from '../config/theme';
 
 class Profile extends Component {
   constructor(props) {
     super(props);
-    this.editPressed = this.editPressed.bind(this);
-    this.signOutPressed = this.signOutPressed.bind(this);
+    this.state = {};
+  }
+
+  profileFetch(uid) {
+    // return (dispatch) => {
+    //   // firebase.database().ref('users').child(uid).on('value', (snapshot) => {
+    //   //   dispatch({ type: PROFILE_FETCH_SUCCESS, payload: snapshot.val() });
+    //   // });
+    // };
   }
 
   componentDidMount() {
-    this.props.profileFetch(this.props.user.uid);
+    this.profileFetch(this.state.uid);
   }
 
-  editPressed() {
-    const { navigation } = this.props;
-    navigation.navigate('EditProfile');
-  }
+  editPressed = () => {
+    this.props.navigation.navigate('EditProfile');
+  };
 
   signOutPressed() {
-    this.props.profileSignout();
+    // return (dispatch) => {
+    //   // Display this message on the login page
+    //   // firebase.auth().signOut();
+    //   dispatch(loginSetMessage('You\'ve been signed out.'));
+    //   NavigationService.navigate('Login');
+    //   setTimeout(() => {
+    //     dispatch({ type: PROFILE_SIGNOUT });
+    //   }, 500);
+    // };
   }
 
   render() {
@@ -34,15 +43,21 @@ class Profile extends Component {
       <View style={styles.container}>
         <View>
           <Text style={styles.info}>
-            Name: {this.props.firstname} {this.props.lastname}
+            Name: {this.props.firstName} {this.props.lastName}
           </Text>
-          <Text style={styles.info}>
-            Username: {this.props.username}
-          </Text>
+          <Text style={styles.info}>Username: {this.props.username}</Text>
         </View>
         <View>
-          <RoundButton mode="contained" title="Edit" onPress={this.editPressed} />
-          <RoundButton mode="outlined" title="Sign Out" onPress={this.signOutPressed} />
+          <RoundButton
+            mode="contained"
+            title="Edit"
+            onPress={this.editPressed}
+          />
+          <RoundButton
+            mode="outlined"
+            title="Sign Out"
+            onPress={this.signOutPressed}
+          />
         </View>
       </View>
     );
@@ -72,18 +87,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    user: state.login.user,
-    firstname: state.profile.firstname,
-    lastname: state.profile.lastname,
-    username: state.profile.username,
-  };
-};
-
-const mapDispatchToProps = {
-  profileFetch,
-  profileSignout,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Profile);
+export default Profile;

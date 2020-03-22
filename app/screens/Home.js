@@ -1,12 +1,10 @@
 import React, {Component} from 'react';
 import {StyleSheet, FlatList} from 'react-native';
-import {connect} from 'react-redux';
 import {Icon} from 'react-native-elements';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import _ from 'lodash';
 import {BACKGROUND_COLOR} from '../config/theme';
 import PactCard from '../components/PactCard';
-import {pactsFetch, pactUpdate} from '../actions';
 
 class Home extends Component {
   static navigationOptions = ({navigation}) => {
@@ -24,33 +22,62 @@ class Home extends Component {
 
   constructor(props) {
     super(props);
-    this.renderItem = this.renderItem.bind(this);
-    this.pactPressed = this.pactPressed.bind(this);
-    this.addPressed = this.addPressed.bind(this);
+    this.state = {};
+  }
+
+  pactsFetch() {
+    // const { currentUser } = firebase.auth();
+    // const dbRef = firebase.database().ref();
+    // dbRef.child('/user-pacts/' + currentUser.uid).on('value', (snapshot) => {
+    //   if (!snapshot.exists()) {
+    //     // User has no pacts
+    //     dispatch({ type: PACTS_FETCH_SUCCESS, payload: null });
+    //   } else {
+    //     const pactIds = Object.keys(snapshot.val());
+    //     // Pipelined fetch all pacts user belongs to
+    //     Promise.all(
+    //       pactIds.map(id => dbRef.child('/pacts/' + id).once('value')),
+    //     ).then((dataSnapshot) => {
+    //       const pacts = [];
+    //       dataSnapshot.forEach((childSnapshot) => {
+    //         const pactId = childSnapshot.key;
+    //         const data = childSnapshot.val();
+    //         data.pactId = pactId;
+    //         pacts.push(data);
+    //       });
+    //       dispatch({ type: PACTS_FETCH_SUCCESS, payload: pacts });
+    //     });
+    //   }
+    // });
+  }
+
+  pactUpdate({prop, value}) {
+    // return {
+    //   type: PACT_UPDATE,
+    //   payload: {prop, value},
+    // };
   }
 
   componentDidMount() {
     this.props.navigation.setParams({addPressed: this.addPressed});
-
-    this.props.pactsFetch();
+    this.pactsFetch();
   }
 
-  pactPressed(index) {
-    const {navigation, pacts} = this.props;
+  pactPressed = index => {
+    // const {pacts} = this.props;
 
     // Load pact information to the 'Pact' screen
-    _.each(pacts[index], (value, prop) => {
-      this.props.pactUpdate({prop, value});
-    });
+    // _.each(pacts[index], (value, prop) => {
+    //   this.pactUpdate({prop, value});
+    // });
 
-    navigation.navigate('Pact');
-  }
+    this.props.navigation.navigate('Pact');
+  };
 
-  addPressed() {
-    const {navigation} = this.props;
+  addPressed = () => {
     // EditPact screen with no redux state passed in => Create Pact
-    navigation.navigate('EditPact');
-  }
+    this.props.navigation.navigate('EditPact');
+  };
 
   renderItem({item, index}) {
     return (
@@ -66,7 +93,7 @@ class Home extends Component {
     return (
       <FlatList
         contentContainerStyle={styles.container}
-        data={this.props.pacts}
+        data={this.state.pacts}
         renderItem={this.renderItem}
         keyExtractor={item => item.pactId}
       />
@@ -85,18 +112,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {
-    pacts: state.home.pacts,
-  };
-};
-
-const mapDispatchToProps = {
-  pactsFetch,
-  pactUpdate,
-};
-
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Home);
+export default Home;

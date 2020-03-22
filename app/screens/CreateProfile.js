@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from 'react';
+import React, {Component, Fragment} from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -8,53 +8,62 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import { connect } from 'react-redux';
-import { HelperText } from 'react-native-paper';
+import {HelperText} from 'react-native-paper';
 import PropTypes from 'prop-types';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoTextHeader from '../components/LogoTextHeader';
-import { PRIMARY_COLOR, PRIMARY_TEXT_COLOR } from '../config/theme';
-import {
-  createProfileFirstnameChanged,
-  createProfileLastnameChanged,
-  createProfileUsernameChanged,
-  createProfileSubmit,
-} from '../actions';
+import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from '../config/theme';
 
 class CreateProfile extends Component {
   constructor(props) {
     super(props);
-    this.onFirstnameChange = this.onFirstnameChange.bind(this);
-    this.onLastnameChange = this.onLastnameChange.bind(this);
-    this.onUsernameChange = this.onUsernameChange.bind(this);
-    this.onCreatePress = this.onCreatePress.bind(this);
+    this.state = {};
   }
 
-  componentDidMount() {
-    
+  // TODO: use :)
+  validateInput({firstName, lastName, username}) {
+    // Names can only contain alphabet characters and dashes
+    const nameRegex = /^[a-z-]+$/i;
+    if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
+      return 'name-format';
+    }
+
+    // Username must be between 4 and 15 characters long
+    if (username.length < 4 || username.length > 15) {
+      return 'username-length';
+    }
+
+    // Username must only contain alphanumeric characters and underscores
+    const usernameRegex = /^\w+$/;
+    if (!usernameRegex.test(username)) {
+      return 'username-format';
+    }
+
+    return true;
   }
 
-  onFirstnameChange(text) {
-    this.props.createProfileFirstnameChanged(text);
-  }
+  componentDidMount() {}
 
-  onLastnameChange(text) {
-    this.props.createProfileLastnameChanged(text);
-  }
+  onfirstNameChange = firstName => {
+    this.setState({firstName});
+  };
 
-  onUsernameChange(text) {
-    this.props.createProfileUsernameChanged(text);
-  }
+  onlastNameChange = lastName => {
+    this.setState({lastName});
+  };
 
-  onCreatePress() {
-    const { firstname, lastname, username } = this.props;
-    this.props.createProfileSubmit({ firstname, lastname, username });
-  }
+  onUsernameChange = username => {
+    this.setState({username});
+  };
+
+  onCreatePress = () => {
+    this.props.navigation.navigate('Home');
+  };
 
   renderMessage() {
-    const { error, message, loading } = this.props;
+    const {error, message, loading} = this.state;
 
     const text = () => {
       if (loading) {
@@ -83,11 +92,8 @@ class CreateProfile extends Component {
     };
 
     return (
-      <View style={{ alignSelf: 'center', marginBottom: 10 }}>
-        <HelperText
-          type={type()}
-          visible={true}
-        >
+      <View style={{alignSelf: 'center', marginBottom: 10}}>
+        <HelperText type={type()} visible={true}>
           {text()}
         </HelperText>
       </View>
@@ -95,50 +101,63 @@ class CreateProfile extends Component {
   }
 
   render() {
-    const {
-      firstname,
-      lastname,
-      username,
-    } = this.props;
+    const {firstName, lastName, username} = this.state;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{ flex: 0, backgroundColor: PRIMARY_COLOR }} />
+        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
         <SafeAreaView style={styles.safeArea}>
           <LogoTextHeader text="Welcome!" />
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.input}>
-              <Text style={{
-                fontSize: 20,
-                alignSelf: 'center',
-                color: PRIMARY_TEXT_COLOR,
-                paddingBottom: 15,
-                // fontFamily: 'OctagenRoman',
-              }}
-              >
+              <Text
+                style={{
+                  fontSize: 20,
+                  alignSelf: 'center',
+                  color: PRIMARY_TEXT_COLOR,
+                  paddingBottom: 15,
+                  // fontFamily: 'OctagenRoman',
+                }}>
                 Just one last thing...
               </Text>
               <View style={styles.twoTextboxes}>
                 <View style={styles.textbox}>
-                  <Textbox label="FIRST NAME" placeholder="John" onChangeText={this.onFirstnameChange} value={firstname} />
+                  <Textbox
+                    label="FIRST NAME"
+                    placeholder="John"
+                    onChangeText={this.onfirstNameChange}
+                    value={firstName}
+                  />
                 </View>
                 <View style={styles.textbox}>
-                  <Textbox label="LAST NAME" placeholder="Doe" onChangeText={this.onLastnameChange} value={lastname} />
+                  <Textbox
+                    label="LAST NAME"
+                    placeholder="Doe"
+                    onChangeText={this.onlastNameChange}
+                    value={lastName}
+                  />
                 </View>
               </View>
-              <Textbox label="USERNAME" placeholder="username" onChangeText={this.onUsernameChange} value={username} />
+              <Textbox
+                label="USERNAME"
+                placeholder="username"
+                onChangeText={this.onUsernameChange}
+                value={username}
+              />
             </View>
-            <View>
-              {this.renderMessage()}
-            </View>
+            <View>{this.renderMessage()}</View>
             <View style={styles.footer}>
-              <View style={{ height: 4, marginTop: 15, marginBottom: 15 }}>
+              <View style={{height: 4, marginTop: 15, marginBottom: 15}}>
                 <RoundSeparator />
               </View>
-              <RoundButton mode="contained" title="Create Profile" onPress={this.onCreatePress} />
+              <RoundButton
+                mode="contained"
+                title="Create Profile"
+                onPress={this.onCreatePress}
+              />
             </View>
           </ScrollView>
         </SafeAreaView>
@@ -147,6 +166,7 @@ class CreateProfile extends Component {
   }
 }
 
+// TODO: look into this. replicate on other comps?
 CreateProfile.propTypes = {
   navigation: PropTypes.shape({
     navigate: PropTypes.func.isRequired,
@@ -161,8 +181,7 @@ const styles = StyleSheet.create({
     paddingRight: 30,
     backgroundColor: '#FFFFFF',
   },
-  footer: {
-  },
+  footer: {},
   input: {
     marginTop: 20,
   },
@@ -181,21 +200,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = (state) => {
-  return {
-    firstname: state.createProfile.firstname,
-    lastname: state.createProfile.lastname,
-    username: state.createProfile.username,
-    error: state.createProfile.error,
-    loading: state.createProfile.loading,
-  };
-};
-
-const mapDispatchToProps = {
-  createProfileFirstnameChanged,
-  createProfileLastnameChanged,
-  createProfileUsernameChanged,
-  createProfileSubmit,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(CreateProfile);
+export default CreateProfile;

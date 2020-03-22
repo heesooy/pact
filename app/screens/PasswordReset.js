@@ -1,30 +1,15 @@
-import React, { Component, Fragment } from 'react';
-import {
-  StyleSheet,
-  View,
-  SafeAreaView,
-  StatusBar,
-  Text,
-} from 'react-native';
-import { connect } from 'react-redux';
+import React, {Component, Fragment} from 'react';
+import {StyleSheet, View, SafeAreaView, StatusBar, Text} from 'react-native';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoHeader from '../components/LogoHeader';
-import { PRIMARY_COLOR, PRIMARY_TEXT_COLOR } from '../config/theme';
-import { loginSetMessage } from '../actions';
+import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from '../config/theme';
 
 class PasswordReset extends Component {
   constructor(props) {
     super(props);
-    this.onEmailChange = this.onEmailChange.bind(this);
-    this.onSubmit = this.onSubmit.bind(this);
-    this.onBackPress = this.onBackPress.bind(this);
-
-    this.state = {
-      email: '',
-      error: '',
-    };
+    this.state = {};
   }
 
   onEmailChange(email) {
@@ -56,32 +41,51 @@ class PasswordReset extends Component {
   }
 
   render() {
-    const { email, error } = this.state;
+    const {email, error} = this.state;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{ flex: 0, backgroundColor: PRIMARY_COLOR }} />
+        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
         <SafeAreaView style={styles.safeArea}>
           <LogoHeader />
           <View style={styles.container}>
             <View style={styles.input}>
-              <Textbox label="EMAIL" placeholder="mail@address.com" onChangeText={this.onEmailChange} value={email} keyboardType="email-address" />
+              <Textbox
+                label="EMAIL"
+                placeholder="mail@address.com"
+                onChangeText={this.onEmailChange}
+                value={email}
+                keyboardType="email-address"
+              />
             </View>
             <View>
-              <Text style={{ fontSize: 20, alignSelf: 'center', color: PRIMARY_TEXT_COLOR }}>
+              <Text
+                style={{
+                  fontSize: 20,
+                  alignSelf: 'center',
+                  color: PRIMARY_TEXT_COLOR,
+                }}>
                 Enter the email address that you used to sign up.
               </Text>
               <RoundSeparator />
-              <Text style={{ fontSize: 20, alignSelf: 'center', color: 'red' }}>
+              <Text style={{fontSize: 20, alignSelf: 'center', color: 'red'}}>
                 {error}
               </Text>
             </View>
             <View style={styles.footer}>
-              <RoundButton mode="contained" title="Submit" onPress={this.onSubmit} />
-              <RoundButton mode="outlined" title="Back" onPress={this.onBackPress} />
+              <RoundButton
+                mode="contained"
+                title="Submit"
+                onPress={this.onSubmit}
+              />
+              <RoundButton
+                mode="outlined"
+                title="Back"
+                onPress={this.onBackPress}
+              />
             </View>
           </View>
         </SafeAreaView>
@@ -111,4 +115,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default connect()(PasswordReset);
+export default PasswordReset;

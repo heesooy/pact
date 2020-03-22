@@ -26,17 +26,15 @@ class Friends extends Component {
 
   constructor(props) {
     super(props);
-    this.addPressed = this.addPressed.bind(this);
   }
 
   componentDidMount() {
     this.props.navigation.setParams({addPressed: this.addPressed});
   }
 
-  addPressed() {
-    const {navigation} = this.props;
-    navigation.navigate('AddFriends');
-  }
+  addPressed = () => {
+    this.props.navigation.navigate('AddFriends');
+  };
 
   render() {
     return (

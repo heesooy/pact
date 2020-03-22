@@ -7,7 +7,6 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import {connect} from 'react-redux';
 import PropTypes from 'prop-types';
 import {Icon, Button, Paragraph, Dialog, Portal} from 'react-native-elements';
 import {FAB, Divider} from 'react-native-paper';
@@ -17,7 +16,6 @@ import RoundButton from '../components/RoundButton';
 import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../config/theme';
 import CheckinDialog from '../components/CheckinDialog';
 import ActivityCircles from '../components/ActivityCircles';
-import {pactUpdate, editPactUpdate} from '../actions';
 import TextboxLabel from '../components/TextboxLabel';
 import RoundedCard from '../components/RoundedCard';
 
@@ -37,7 +35,6 @@ class Pact extends Component {
 
   constructor(props) {
     super(props);
-    this.editPressed = this.editPressed.bind(this);
   }
 
   componentDidMount() {
@@ -47,7 +44,7 @@ class Pact extends Component {
     });
   }
 
-  editPressed() {
+  editPressed = () => {
     const {navigation, pactId, name, description, participants} = this.props;
 
     const pactInfo = {
@@ -62,7 +59,7 @@ class Pact extends Component {
     });
 
     navigation.navigate('EditPact');
-  }
+  };
 
   render() {
     return (
@@ -160,18 +157,4 @@ const styles = StyleSheet.create({
   },
 });
 
-const mapStateToProps = state => {
-  return {
-    pactId: state.pact.pactId,
-    name: state.pact.name,
-    description: state.pact.description,
-    participants: state.pact.participants,
-  };
-};
-
-const mapDispatchToProps = {
-  pactUpdate,
-  editPactUpdate,
-};
-
-export default connect(mapStateToProps, mapDispatchToProps)(Pact);
+export default Pact;
