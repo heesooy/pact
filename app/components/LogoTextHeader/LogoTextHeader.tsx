@@ -4,7 +4,6 @@ import styles from './styles';
 import logo from '../../../assets/images/logo.png';
 
 type Props = {
-  /** text for the header */
   text: string;
 }
 

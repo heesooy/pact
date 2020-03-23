@@ -82,7 +82,6 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  /** navigation prop that is in all screens */
   navigation: NavigationStackProp<{}>;
   name: string;
   description: string;

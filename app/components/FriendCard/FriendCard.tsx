@@ -4,15 +4,10 @@ import { Avatar, Card } from 'react-native-paper';
 import styles from './styles';
 
 type Props = {
-  /** function that is executed when a child component is pressed */
   onPress: () => void;
-  /** name of friend on the card */
   title: string;
-  /** username of friend on the card */
   subtitle: string;
-  /** optional styling for the component */
   style?: ViewStyle;
-  /** intials of friend on the card */
   initials: string;
 }
 

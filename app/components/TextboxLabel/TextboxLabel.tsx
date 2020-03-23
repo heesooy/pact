@@ -3,7 +3,6 @@ import { View, Text } from 'react-native';
 import styles from './styles';
 
 type Props = {
-  /** text for the label */
   text: string;
 }
 

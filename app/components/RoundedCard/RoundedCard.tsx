@@ -4,9 +4,7 @@ import { View } from 'react-native';
 import styles from './styles';
 
 type Props = {
-  /** function that is executed when a child component is pressed */
   onPress: () => void;
-  /** text for the component */
   text: string;
 }
 

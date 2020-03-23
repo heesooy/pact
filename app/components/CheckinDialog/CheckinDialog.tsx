@@ -7,12 +7,10 @@ import Textbox from '../Textbox/Textbox';
 import styles from './styles';
 
 type Props = {
-  /** function that is executed when textbox is changed */
   onChangeText: () => void;
 }
 
 type State = {
-  /** whether the dialog is visible */
   visible: boolean;
 }
 

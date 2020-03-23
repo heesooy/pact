@@ -21,16 +21,12 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  /** navigation prop that is in all screens */
   navigation: NavigationStackProp<{}>;
 }
 
 type Pact = {
-  /** name of pact */
   name: string;
-  /** name of description */
   description: string;
-  /** id of pact */
   pactId: string;
 };
 

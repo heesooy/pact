@@ -4,9 +4,7 @@ import CircleButton from '../CircleButton/CircleButton';
 import styles from './styles';
 
 type Props = {
-  /** function that is executed when a child component is pressed */
   onPress: () => void;
-  /** optional styling for the component */
   style?: ViewStyle;
 }
 

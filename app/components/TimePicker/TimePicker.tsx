@@ -6,7 +6,6 @@ import RoundButton from '../RoundButton/RoundButton';
 import styles from './styles';
 
 type State = {
-  /** whether the DateTimePicker is visible */
   isDateTimePickerVisible: boolean;
 };
 

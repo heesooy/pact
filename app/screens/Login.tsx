@@ -52,20 +52,14 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  /** navigation prop that is in all screens */
   navigation: NavigationStackProp<{}>;
 }
 
 type State = {
-  /** user email */
   email?: string;
-  /** user password */
   password?: string;
-  /** any errors in the submission of a new profile */
   error?: string;
-  /** message in the submission of a new profile */
   message?: string;
-  /** whether the screen is loading */
   loading?: boolean;
 }
 

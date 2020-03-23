@@ -3,7 +3,6 @@ import { View } from 'react-native';
 import styles from './styles';
 
 type Props = {
-  /** child components to be placed in the Card */
   children: React.Component;
 }
 

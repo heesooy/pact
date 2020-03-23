@@ -4,19 +4,12 @@ import { View, ViewStyle } from 'react-native';
 import styles from './styles';
 
 type Props = {
-  /** function that is executed when a child component is pressed */
   onPress: () => void;
-  /** mode for the child button */
   mode?: 'text' | 'outlined' | 'contained' | undefined;
-  /** text for the child button */
   title: string;
-  /** icon for the child button */
   icon?: string;
-  /** optional styling for the component */
   style?: ViewStyle;
-  /** optional content styling for the component */
   contentStyle?: ViewStyle;
-  /** optional container styling for the component */
   containerStyle?: ViewStyle;
 }
 

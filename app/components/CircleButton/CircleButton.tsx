@@ -4,11 +4,8 @@ import { StyleSheet } from 'react-native';
 import styles from './styles';
 
 type Props = {
-  /** function that is executed when a child component is pressed */
   onPress: () => void;
-  /** text in circle */
   text: string;
-  /** whether the circle is highlighted */
   highlight?: boolean;
 }
 

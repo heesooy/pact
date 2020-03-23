@@ -4,9 +4,7 @@ import CircleIndicator from '../CircleIndicator/CircleIndicator';
 import styles from './styles';
 
 type Props = {
-  /** optional styling for the component */
   style?: ViewStyle;
-  /** optional label for the component */
   label?: string;
 }
 

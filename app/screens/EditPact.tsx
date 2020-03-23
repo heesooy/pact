@@ -48,18 +48,13 @@ const styles = StyleSheet.create({
 });
 
 type Props = {
-  /** navigation prop that is in all screens */
   navigation: NavigationStackProp<{}>;
 }
 
 type State = {
-  /** id of the pact */
   pactId?: string;
-  /** name of the pact */
   pactName?: string;
-  /** description of the pact */
   pactDescription?: string;
-  /** participants of the pact */
   pactParticipants?: string;
 }
 

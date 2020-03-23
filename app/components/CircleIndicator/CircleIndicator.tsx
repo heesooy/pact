@@ -5,9 +5,7 @@ import { Icon } from 'react-native-elements';
 import styles from './styles';
 
 type Props = {
-  /** whether the circle is checked */
   checked?: boolean;
-  /** whether the circle is active */
   active?: boolean;
 }
 
