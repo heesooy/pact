@@ -1,37 +1,8 @@
-import React, {Component} from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import PropTypes from 'prop-types';
+import React, { Component } from 'react';
+import { StyleSheet, Text, View } from 'react-native';
+import { NavigationStackProp } from 'react-navigation-stack';
 import RoundButton from '../components/RoundButton';
-import {BACKGROUND_COLOR} from '../config/theme';
-
-class EditProfile extends Component {
-  constructor(props) {
-    super(props);
-  }
-
-  savePressed = () => {
-    this.props.navigation.navigate('Profile');
-  };
-
-  render() {
-    return (
-      <View style={styles.container}>
-        <Text style={styles.welcome}>This is the Edit Profile page!</Text>
-        <RoundButton
-          mode="contained"
-          title="Save Changes"
-          onPress={this.savePressed}
-        />
-      </View>
-    );
-  }
-}
-
-EditProfile.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
+import { BACKGROUND_COLOR } from '../config/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -44,5 +15,44 @@ const styles = StyleSheet.create({
     paddingTop: 15,
   },
 });
+
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
+
+type State = {
+  /** first name of the user */
+  firstName?: string;
+  /** last name of the user */
+  lastName?: string;
+  /** username of the user */
+  username?: string;
+  /** any errors in the submission of a new profile */
+  error?: string;
+  /** message in the submission of a new profile */
+  message?: string;
+  /** whether the screen is loading */
+  loading?: boolean;
+}
+
+class EditProfile extends Component<Props, State> {
+  savePressed = (): void => {
+    this.props.navigation.navigate('Profile');
+  };
+
+  render(): JSX.Element {
+    return (
+      <View style={styles.container}>
+        <Text>This is the Edit Profile page!</Text>
+        <RoundButton
+          mode="contained"
+          title="Save Changes"
+          onPress={this.savePressed}
+        />
+      </View>
+    );
+  }
+}
 
 export default EditProfile;

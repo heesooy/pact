@@ -1,24 +1,69 @@
-import React, {Component, Fragment} from 'react';
-import {StyleSheet, View, SafeAreaView, StatusBar, Text} from 'react-native';
+import React, { Component, Fragment } from 'react';
+import {
+  StyleSheet, View, SafeAreaView, StatusBar, Text,
+} from 'react-native';
+import { NavigationStackProp } from 'react-navigation-stack';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoHeader from '../components/LogoHeader';
-import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from '../config/theme';
+import { PRIMARY_COLOR, PRIMARY_TEXT_COLOR } from '../config/theme';
 
-class PasswordReset extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  footer: {
+    marginTop: 15,
+  },
+  input: {
+    marginTop: 20,
+  },
+  firstSafeArea: {
+    flex: 0,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  secondSafeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  text: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: PRIMARY_TEXT_COLOR,
+  },
+  errorText: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: 'red',
+  },
+});
+
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
+
+type State = {
+  /** user email */
+  email?: string;
+  /** error string */
+  error?: string;
+}
+
+class PasswordReset extends Component<Props, State> {
+  state: State = {};
+
+  onEmailChange(email: string): void {
+    this.setState({ email });
   }
 
-  onEmailChange(email) {
-    this.setState({
-      email,
-    });
-  }
-
-  onSubmit() {
+  onSubmit(): void {
     this.setState({
       error: '',
     });
@@ -36,20 +81,20 @@ class PasswordReset extends Component {
     // });
   }
 
-  onBackPress() {
+  onBackPress(): void {
     this.props.navigation.navigate('Login');
   }
 
-  render() {
-    const {email, error} = this.state;
+  render(): JSX.Element {
+    const { email, error } = this.state;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.firstSafeArea} />
+        <SafeAreaView style={styles.secondSafeArea}>
           <LogoHeader />
           <View style={styles.container}>
             <View style={styles.input}>
@@ -63,15 +108,11 @@ class PasswordReset extends Component {
             </View>
             <View>
               <Text
-                style={{
-                  fontSize: 20,
-                  alignSelf: 'center',
-                  color: PRIMARY_TEXT_COLOR,
-                }}>
+                style={styles.text}>
                 Enter the email address that you used to sign up.
               </Text>
               <RoundSeparator />
-              <Text style={{fontSize: 20, alignSelf: 'center', color: 'red'}}>
+              <Text style={styles.errorText}>
                 {error}
               </Text>
             </View>
@@ -93,26 +134,5 @@ class PasswordReset extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    paddingLeft: 30,
-    paddingRight: 30,
-  },
-  footer: {
-    marginTop: 15,
-  },
-  input: {
-    marginTop: 20,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-});
 
 export default PasswordReset;

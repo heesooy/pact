@@ -1,42 +1,51 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
-  Text,
-  View,
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
-import PropTypes from 'prop-types';
-import {Icon} from 'react-native-elements';
-import {BACKGROUND_COLOR} from '../config/theme';
+import { NavigationStackProp } from 'react-navigation-stack';
+import { Icon } from 'react-native-elements';
+import { BACKGROUND_COLOR } from '../config/theme';
 import FriendCard from '../components/FriendCard';
 
-class Friends extends Component {
-  static navigationOptions = ({navigation}) => {
-    return {
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={navigation.getParam('addPressed')}
-          style={{marginRight: 20}}>
-          <Icon name="add" type="material" color="#7E7E7E" />
-        </TouchableOpacity>
-      ),
-    };
-  };
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: BACKGROUND_COLOR,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    padding: 15,
+  },
+  headerRight: {
+    marginRight: 20,
+  },
+});
 
-  constructor(props) {
-    super(props);
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
+
+class Friends extends Component<Props> {
+  static navigationOptions = ({ navigation }: Props): { headerRight: () => JSX.Element } => ({
+    headerRight: (): JSX.Element => (
+      <TouchableOpacity
+        onPress={navigation.getParam('addPressed')}
+        style={styles.headerRight}>
+        <Icon name="add" type="material" color="#7E7E7E" />
+      </TouchableOpacity>
+    ),
+  });
+
+  componentDidMount(): void {
+    this.props.navigation.setParams({ addPressed: this.addPressed });
   }
 
-  componentDidMount() {
-    this.props.navigation.setParams({addPressed: this.addPressed});
-  }
-
-  addPressed = () => {
+  addPressed = (): void => {
     this.props.navigation.navigate('AddFriends');
   };
 
-  render() {
+  render(): JSX.Element {
     return (
       <ScrollView contentContainerStyle={styles.container}>
         <FriendCard
@@ -49,20 +58,5 @@ class Friends extends Component {
     );
   }
 }
-
-Friends.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: BACKGROUND_COLOR,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    padding: 15,
-  },
-});
 
 export default Friends;

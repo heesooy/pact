@@ -1,31 +1,62 @@
-import React, {Component} from 'react';
-import {StyleSheet, FlatList} from 'react-native';
-import {Icon} from 'react-native-elements';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import _ from 'lodash';
-import {BACKGROUND_COLOR} from '../config/theme';
+import React, { Component } from 'react';
+import { StyleSheet, FlatList } from 'react-native';
+import { NavigationStackProp } from 'react-navigation-stack';
+import { Icon } from 'react-native-elements';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { BACKGROUND_COLOR } from '../config/theme';
 import PactCard from '../components/PactCard';
 
-class Home extends Component {
-  static navigationOptions = ({navigation}) => {
-    return {
-      title: 'Your Pacts',
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={navigation.getParam('addPressed')}
-          style={{marginRight: 20}}>
-          <Icon name="add" type="material" color="#7E7E7E" />
-        </TouchableOpacity>
-      ),
-    };
-  };
+const styles = StyleSheet.create({
+  container: {
+    backgroundColor: BACKGROUND_COLOR,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingLeft: 15,
+    paddingRight: 15,
+    paddingTop: 15,
+  },
+  headerRight: {
+    marginRight: 20,
+  },
+});
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
 
-  pactsFetch() {
+type Pact = {
+  /** name of pact */
+  name: string;
+  /** name of description */
+  description: string;
+  /** id of pact */
+  pactId: string;
+};
+
+type State = {
+  // should be prop?
+  pacts?: [Pact];
+}
+
+class Home extends Component<Props, State> {
+  static navigationOptions = ({ navigation }: Props): {
+    headerRight: () => JSX.Element;
+    title: string;
+  } => ({
+    title: 'Your Pacts',
+    headerRight: (): JSX.Element => (
+      <TouchableOpacity
+        onPress={navigation.getParam('addPressed')}
+        style={styles.headerRight}>
+        <Icon name="add" type="material" color="#7E7E7E" />
+      </TouchableOpacity>
+    ),
+  });
+
+  state: State = {};
+
+  pactsFetch(): void {
     // const { currentUser } = firebase.auth();
     // const dbRef = firebase.database().ref();
     // dbRef.child('/user-pacts/' + currentUser.uid).on('value', (snapshot) => {
@@ -51,65 +82,53 @@ class Home extends Component {
     // });
   }
 
-  pactUpdate({prop, value}) {
+  pactUpdate(): void {
     // return {
     //   type: PACT_UPDATE,
     //   payload: {prop, value},
     // };
   }
 
-  componentDidMount() {
-    this.props.navigation.setParams({addPressed: this.addPressed});
+  componentDidMount(): void {
+    this.props.navigation.setParams({ addPressed: this.addPressed });
     this.pactsFetch();
   }
 
-  pactPressed = index => {
+  pactPressed = (index: number): void => {
     // const {pacts} = this.props;
 
     // Load pact information to the 'Pact' screen
     // _.each(pacts[index], (value, prop) => {
     //   this.pactUpdate({prop, value});
     // });
-
     this.props.navigation.navigate('Pact');
   };
 
-  addPressed = () => {
+  addPressed = (): void => {
     // EditPact screen with no redux state passed in => Create Pact
     this.props.navigation.navigate('EditPact');
   };
 
-  renderItem({item, index}) {
+  renderItem({ item, index }: {item: Pact; index: number}): JSX.Element {
     return (
       <PactCard
-        onPress={() => this.pactPressed(index)}
+        onPress={(): void => this.pactPressed(index)}
         title={item.name}
         subtitle={item.description}
       />
     );
   }
 
-  render() {
+  render(): JSX.Element {
     return (
       <FlatList
         contentContainerStyle={styles.container}
         data={this.state.pacts}
         renderItem={this.renderItem}
-        keyExtractor={item => item.pactId}
+        keyExtractor={(item: Pact): string => item.pactId}
       />
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    backgroundColor: BACKGROUND_COLOR,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingTop: 15,
-  },
-});
 
 export default Home;

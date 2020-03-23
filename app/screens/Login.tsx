@@ -1,31 +1,86 @@
-import React, {Component, Fragment} from 'react';
-import {StyleSheet, View, SafeAreaView, StatusBar, Text} from 'react-native';
+import React, { Component, Fragment } from 'react';
+import {
+  StyleSheet, View, SafeAreaView, StatusBar,
+} from 'react-native';
+import { NavigationStackProp } from 'react-navigation-stack';
+import { HelperText } from 'react-native-paper';
 import userProfileExists from '../config/auth';
-import {HelperText} from 'react-native-paper';
-import PropTypes from 'prop-types';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoHeader from '../components/LogoHeader';
-import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from '../config/theme';
+import { PRIMARY_COLOR } from '../config/theme';
 
-class Login extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    // TODO: remove all hex values
+    // TODO: no unnecessary magic numbers
+    backgroundColor: '#FFFFFF',
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  footer: {
+    marginTop: 15,
+  },
+  input: {
+    marginTop: 20,
+  },
+  firstSafeArea: {
+    flex: 0,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  secondSafeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  wrongPassword: {
+    marginLeft: 15,
+  },
+  message: {
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  textbox: {
+    marginBottom: 0,
+  },
+  invalidEmail: {
+    marginLeft: 15,
+  },
+});
 
-  componentDidMount() {}
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
 
-  onEmailChange = email => {
-    this.setState({email});
+type State = {
+  /** user email */
+  email?: string;
+  /** user password */
+  password?: string;
+  /** any errors in the submission of a new profile */
+  error?: string;
+  /** message in the submission of a new profile */
+  message?: string;
+  /** whether the screen is loading */
+  loading?: boolean;
+}
+
+class Login extends Component<Props, State> {
+  state: State = {};
+
+  onEmailChange = (email: string): void => {
+    this.setState({ email });
   };
 
-  onPasswordChange = password => {
-    this.setState({password});
+  onPasswordChange = (password: string): void => {
+    this.setState({ password });
   };
 
-  loginSuccess(user) {
+  loginSuccess(user: Readonly<{}>): void {
     if (userProfileExists(user)) {
       this.props.navigation.navigate('Home');
     } else {
@@ -33,7 +88,7 @@ class Login extends Component {
     }
   }
 
-  loginFail(error) {
+  loginFail(error: string): void {
     // TODO: handle
     // dispatch({
     //   type: LOGIN_FAIL,
@@ -41,29 +96,29 @@ class Login extends Component {
     // });
   }
 
-  onLoginPress = () => {
-    const {email, password} = this.state;
+  onLoginPress = (): void => {
+    // const { email, password } = this.state;
 
-    if (true) {
-      this.loginSuccess({});
-    } else {
-      this.loginFail('Incorrect username/password.');
-    }
+    // if (true) {
+    this.loginSuccess({});
+    // } else {
+    // this.loginFail('Incorrect username/password.');
+    // }
   };
 
-  onSignupPress = () => {
+  onSignupPress = (): void => {
     this.props.navigation.navigate('Signup', {
       email: this.state.email,
     });
   };
 
-  onResetPassword = () => {
+  onResetPassword = (): void => {
     this.props.navigation.navigate('PasswordReset');
   };
 
-  renderMessage() {
-    const {message, loading} = this.props;
-    const {error} = this.state;
+  renderMessage(): JSX.Element {
+    const { message, loading } = this.state;
+    const { error } = this.state;
 
     let errorText;
 
@@ -76,7 +131,7 @@ class Login extends Component {
     const messageType = !loading && error ? 'error' : 'info';
 
     return (
-      <View style={{alignSelf: 'center', marginBottom: 10}}>
+      <View style={styles.message}>
         <HelperText type={messageType} visible={true}>
           {errorText}
         </HelperText>
@@ -84,16 +139,16 @@ class Login extends Component {
     );
   }
 
-  render() {
-    const {email, password} = this.props;
+  render(): JSX.Element {
+    const { email, password } = this.state;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.firstSafeArea} />
+        <SafeAreaView style={styles.secondSafeArea}>
           <LogoHeader />
           <View style={styles.container}>
             <View style={styles.input}>
@@ -103,12 +158,12 @@ class Login extends Component {
                 onChangeText={this.onEmailChange}
                 value={email}
                 keyboardType="email-address"
-                style={{marginBottom: 0}}
+                style={styles.textbox}
               />
               <HelperText
                 type="error"
-                visible={this.props.error === 'auth/invalid-email'}
-                style={{marginLeft: 15}}>
+                visible={this.state.error === 'auth/invalid-email'}
+                style={styles.invalidEmail}>
                 Invalid Email
               </HelperText>
               <Textbox
@@ -117,7 +172,7 @@ class Login extends Component {
                 placeholder="Enter password"
                 onChangeText={this.onPasswordChange}
                 value={password}
-                style={{marginBottom: 0}}
+                style={styles.textbox}
               />
               <HelperText
                 type="error"
@@ -149,37 +204,5 @@ class Login extends Component {
     );
   }
 }
-
-Login.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    // TODO: remove all hex values
-    // TODO: no unnecessary magic numbers
-    backgroundColor: '#FFFFFF',
-    paddingLeft: 30,
-    paddingRight: 30,
-  },
-  footer: {
-    marginTop: 15,
-  },
-  input: {
-    marginTop: 20,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  wrongPassword: {
-    marginLeft: 15,
-  },
-});
 
 export default Login;

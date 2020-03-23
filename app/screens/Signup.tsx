@@ -1,24 +1,82 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   StyleSheet,
   ScrollView,
   View,
   SafeAreaView,
   StatusBar,
-  Text,
 } from 'react-native';
-import {HelperText} from 'react-native-paper';
-import PropTypes from 'prop-types';
+import { NavigationStackProp } from 'react-navigation-stack';
+import { HelperText } from 'react-native-paper';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoTextHeader from '../components/LogoTextHeader';
-import {PRIMARY_COLOR} from '../config/theme';
+import { PRIMARY_COLOR } from '../config/theme';
 
-class Signup extends Component {
-  constructor(props) {
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    backgroundColor: '#FFFFFF',
+    paddingLeft: 30,
+    paddingRight: 30,
+  },
+  footer: {
+    marginTop: 15,
+  },
+  input: {
+    marginTop: 20,
+  },
+  firstSafeArea: {
+    flex: 0,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  secondSafeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  confirmPass: {
+    marginBottom: 0,
+  },
+  roundSep: {
+    height: 4,
+    marginTop: 5,
+    marginBottom: 15,
+  },
+  centerAlign: {
+    alignSelf: 'center',
+  },
+});
+
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+  email: string;
+}
+
+type State = {
+  /** user email */
+  email?: string;
+  /** user password */
+  password?: string;
+  passwordConfirmation?: string;
+  /** any errors in the submission of a new profile */
+  error?: string;
+  /** message in the submission of a new profile */
+  message?: string;
+  /** whether the screen is loading */
+  loading?: boolean;
+}
+
+class Signup extends Component<Props, State> {
+  mounted: boolean;
+
+  constructor(props: Props) {
     super(props);
     this.state = {};
+    this.mounted = false;
 
     const loginEmail = this.props.navigation.getParam('email', '');
     if (loginEmail !== '') {
@@ -26,29 +84,29 @@ class Signup extends Component {
     }
   }
 
-  componentDidMount() {
-    this._mounted = true;
+  componentDidMount(): void {
+    this.mounted = true;
   }
 
-  componentWillUnmount() {
-    this._mounted = false;
+  componentWillUnmount(): void {
+    this.mounted = false;
   }
 
-  onEmailChange = email => {
-    if (this._mounted) {
-      this.setState({email});
+  onEmailChange = (email: string): void => {
+    if (this.mounted) {
+      this.setState({ email });
     }
   };
 
-  onPasswordChange = password => {
-    this.setState({password});
+  onPasswordChange = (password: string): void => {
+    this.setState({ password });
   };
 
-  onPasswordConfirmChange = passwordConfirmation => {
-    this.setState({passwordConfirmation});
+  onPasswordConfirmChange = (passwordConfirmation: string): void => {
+    this.setState({ passwordConfirmation });
   };
 
-  signupSuccess(dispatch) {
+  signupSuccess(): void {
     // dispatch({ type: SIGNUP_SUCCESS });
 
     // Display this message on the login page
@@ -56,7 +114,7 @@ class Signup extends Component {
     this.props.navigation.navigate('Login');
   }
 
-  signupFail(dispatch, error) {
+  signupFail(): void {
     // dispatch({
     //   type: SIGNUP_FAIL,
     //   payload: error.code,
@@ -64,7 +122,7 @@ class Signup extends Component {
   }
 
   // TODO: password must match with confirmation
-  onSignupPress = () => {
+  onSignupPress = (): void => {
     // const {email, password, passwordConfirmation} = this.state;
     // return (dispatch) => {
     //   dispatch({ type: SIGNUP_SUBMIT });
@@ -89,14 +147,14 @@ class Signup extends Component {
     // };
   };
 
-  onBackPress = () => {
+  onBackPress = (): void => {
     this.props.navigation.navigate('Login');
   };
 
-  renderMessage() {
-    const {error, message, loading} = this.props;
+  renderMessage(): JSX.Element {
+    const { error, loading } = this.state;
 
-    const text = () => {
+    const text = (): string | undefined => {
       if (loading) {
         return 'Signing in...';
       }
@@ -118,7 +176,7 @@ class Signup extends Component {
       return error;
     };
 
-    const type = () => {
+    const type = (): string => {
       if (loading) {
         return 'info';
       }
@@ -129,7 +187,7 @@ class Signup extends Component {
     };
 
     return (
-      <View style={{alignSelf: 'center'}}>
+      <View style={styles.centerAlign}>
         <HelperText type={type()} visible={true}>
           {text()}
         </HelperText>
@@ -137,16 +195,14 @@ class Signup extends Component {
     );
   }
 
-  render() {
-    const {email} = this.props;
-
+  render(): JSX.Element {
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.firstSafeArea} />
+        <SafeAreaView style={styles.secondSafeArea}>
           <LogoTextHeader text="join pact" />
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.input}>
@@ -154,7 +210,7 @@ class Signup extends Component {
                 label="EMAIL"
                 placeholder="mail@address.com"
                 onChangeText={this.onEmailChange}
-                value={email}
+                value={this.props.email}
                 keyboardType="email-address"
               />
               <Textbox
@@ -168,10 +224,10 @@ class Signup extends Component {
                 // secureTextEntry
                 placeholder="Re-enter password"
                 onChangeText={this.onPasswordConfirmChange}
-                style={{marginBottom: 0}}
+                style={styles.confirmPass}
               />
             </View>
-            <View style={{height: 4, marginTop: 5, marginBottom: 15}}>
+            <View style={styles.roundSep}>
               {this.renderMessage()}
               <RoundSeparator />
             </View>
@@ -193,32 +249,5 @@ class Signup extends Component {
     );
   }
 }
-
-Signup.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    backgroundColor: '#FFFFFF',
-    paddingLeft: 30,
-    paddingRight: 30,
-  },
-  footer: {
-    marginTop: 15,
-  },
-  input: {
-    marginTop: 20,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-});
 
 export default Signup;

@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -6,28 +6,71 @@ import {
   SafeAreaView,
   StatusBar,
 } from 'react-native';
+import { NavigationStackProp } from 'react-navigation-stack';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import CircleButtons from '../components/CircleButtons';
 import RoundSeparator from '../components/RoundSeparator';
-import {PRIMARY_COLOR} from '../config/theme';
+import { PRIMARY_COLOR } from '../config/theme';
 import TextboxLabel from '../components/TextboxLabel';
 import TimePicker from '../components/TimePicker';
-import {Icon} from 'react-native-elements';
 
-class EditPact extends Component {
-  static navigationOptions = ({navigation}) => {
-    return {
-      title: navigation.getParam('title', 'Edit Pact'),
-    };
-  };
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: '#FFFFFF',
+  },
+  footer: {},
+  input: {
+    marginTop: 20,
+  },
+  outlineButton: {
+    marginTop: 6,
+    borderWidth: 1,
+    borderColor: '#777',
+  },
+  firstSafeArea: {
+    flex: 0,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  secondSafeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  roundSep: {
+    height: 4,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+});
 
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
 
-  editPactCreate({name, description, friendUid}) {
+type State = {
+  /** id of the pact */
+  pactId?: string;
+  /** name of the pact */
+  pactName?: string;
+  /** description of the pact */
+  pactDescription?: string;
+  /** participants of the pact */
+  pactParticipants?: string;
+}
+
+class EditPact extends Component<Props, State> {
+  static navigationOptions = ({ navigation }: Props): { title: string } => ({
+    title: navigation.getParam('title', 'Edit Pact'),
+  });
+
+  state: State = {};
+
+  editPactCreate(/* name?: string, description?: string, friendUid?: string */): void {
     // const { currentUser } = firebase.auth();
     // const pactData = {
     //   name,
@@ -58,7 +101,9 @@ class EditPact extends Component {
     // });
   }
 
-  editPactSave({pactId, name, description, friendUid}) {
+  editPactSave(
+  /* pactId?: string, name?: string, description?: string, friendUid?: string */
+  ): void {
     // const { currentUser } = firebase.auth();
     // const dbRef = firebase.database().ref();
     // dbRef.child('/pacts/' + pactId + '/participants').once('value', (snapshot) => {
@@ -92,45 +137,40 @@ class EditPact extends Component {
     // });
   }
 
-  componentDidMount() {
+  componentDidMount(): void {
     // TODO: is this redundant?
     this.props.navigation.setParams({
       title: this.state.pactParticipants === null ? 'Create Pact' : 'Edit Pact',
     });
   }
 
-  onPactNameChange = pactName => {
-    this.setState({pactName});
+  onPactNameChange = (pactName: string): void => {
+    this.setState({ pactName });
   };
 
-  onDescChange = pactDescription => {
-    this.setState({pactDescription});
+  onDescChange = (pactDescription: string): void => {
+    this.setState({ pactDescription });
   };
 
-  onFriendPress = () => {
+  onFriendPress = (): void => {
     this.props.navigation.navigate('AddFriends');
   };
 
-  onSavePress = () => {
-    const data = {
-      name: this.state.pactName,
-      description: this.state.pactDescription,
-      friendUid: '5rodgDHsVxPsmTlXXoTLdpzq7Iv2',
-    };
+  onSavePress = (): void => {
+    // const friend = '5rodgDHsVxPsmTlXXoTLdpzq7Iv2';
 
-    // A pact was passed in => we are editing
-    if (this.state.participants !== null) {
-      data.pactId = this.state.pactId;
-      this.editPactSave(data);
+    if (this.state.pactParticipants !== null) {
+      this.editPactSave(
+        /* this.state.pactId, this.state.pactName, this.state.pactDescription, friend */
+      );
     } else {
-      // we are creating a new pact
-      this.editPactCreate(data);
+      this.editPactCreate(/* this.state.pactName, this.state.pactDescription, friend */);
     }
 
     this.props.navigation.pop();
   };
 
-  onDeletePress = () => {
+  onDeletePress = (): void => {
     // const dbRef = firebase.database().ref();
     // // Remove pact from users' user-pact list
     // const users = Object.keys(participants);
@@ -139,20 +179,20 @@ class EditPact extends Component {
     // // Remove pact data
     // dbRef.child('/pacts/' + pactId).remove().then(() => {
     //   dispatch({ type: EDIT_PACT_DELETE });
-    //   NavigationService.navigate('Home');
+    // NavigationService.navigate('Home');
     // });
   };
 
-  render() {
-    const {pactName, pactDescription, pactParticipants} = this.state;
+  render(): JSX.Element {
+    const { pactName, pactDescription } = this.state;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.firstSafeArea} />
+        <SafeAreaView style={styles.secondSafeArea}>
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.input}>
               <Textbox
@@ -169,19 +209,17 @@ class EditPact extends Component {
               />
               <TextboxLabel text="CHOOSE A FRIEND" />
               <RoundButton
-                mode="outline"
+                mode="outlined"
                 title=""
-                icon={
-                  <Icon name="add" color={styles.outlineButton.borderColor} />
-                }
+                icon="add"
                 onPress={this.onFriendPress}
                 style={styles.outlineButton}
               />
               <TextboxLabel text="DAYS" />
-              <CircleButtons onPress={this.onDescChange} />
+              <CircleButtons onPress={this.onDeletePress} />
               <TimePicker />
             </View>
-            <View style={{height: 4, marginTop: 15, marginBottom: 15}}>
+            <View style={styles.roundSep}>
               <RoundSeparator />
             </View>
             <View style={styles.footer}>
@@ -202,28 +240,5 @@ class EditPact extends Component {
     );
   }
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    paddingLeft: 30,
-    paddingRight: 30,
-    backgroundColor: '#FFFFFF',
-  },
-  footer: {},
-  input: {
-    marginTop: 20,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  outlineButton: {
-    marginTop: 6,
-    borderWidth: 1,
-    borderColor: '#777',
-  },
-});
 
 export default EditPact;

@@ -1,12 +1,11 @@
 import React from 'react';
-import {Platform} from 'react-native';
-import {createAppContainer} from 'react-navigation';
-import {createBottomTabNavigator} from 'react-navigation-tabs';
-import {createStackNavigator} from 'react-navigation-stack';
-import {Icon} from 'react-native-elements';
-import PropTypes from 'prop-types';
+import { Platform } from 'react-native';
+import { createAppContainer, NavigationScreenProp, NavigationRoute } from 'react-navigation';
+import { createBottomTabNavigator } from 'react-navigation-tabs';
+import { createStackNavigator } from 'react-navigation-stack';
+import { Icon } from 'react-native-elements';
 import createAnimatedSwitchNavigator from 'react-navigation-animated-switch';
-import {Transition} from 'react-native-reanimated';
+import { Transition } from 'react-native-reanimated';
 
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
@@ -20,7 +19,7 @@ import AddFriends from '../screens/AddFriends';
 import AuthLoading from '../screens/AuthLoading';
 import CreateProfile from '../screens/CreateProfile';
 import PasswordReset from '../screens/PasswordReset';
-import {PRIMARY_COLOR} from './theme';
+import { PRIMARY_COLOR } from './theme';
 
 /* LogIn Page Navigation Properties */
 const LoginStack = createStackNavigator(
@@ -62,10 +61,12 @@ const HomeStack = createStackNavigator({
   },
 });
 
-HomeStack.navigationOptions = ({navigation}) => {
+HomeStack.navigationOptions = (
+  { navigation }: { navigation: NavigationScreenProp<NavigationRoute<string>, string>},
+): { tabBarVisible: boolean } => {
   let tabBarVisible = true;
   if (navigation.state.routes.length > 1) {
-    navigation.state.routes.forEach(route => {
+    navigation.state.routes.forEach((route) => {
       if (route.routeName === 'EditPact') {
         tabBarVisible = false;
       }
@@ -109,10 +110,12 @@ const ProfileStack = createStackNavigator({
   },
 });
 
-ProfileStack.navigationOptions = ({navigation}) => {
+ProfileStack.navigationOptions = (
+  { navigation }: { navigation: NavigationScreenProp<NavigationRoute<string>, string>},
+): { tabBarVisible: boolean } => {
   let tabBarVisible = true;
   if (navigation.state.routes.length > 1) {
-    navigation.state.routes.forEach(route => {
+    navigation.state.routes.forEach((route) => {
       if (route.routeName === 'EditProfile') {
         tabBarVisible = false;
       }
@@ -125,26 +128,9 @@ ProfileStack.navigationOptions = ({navigation}) => {
 };
 
 /* Navigation Bar Properties */
-const HomeTabBarIcon = ({tintColor}) => {
-  return <Icon name="home" color={tintColor} />;
-};
-HomeTabBarIcon.propTypes = {
-  tintColor: PropTypes.string.isRequired,
-};
-
-const FriendsTabBarIcon = ({tintColor}) => {
-  return <Icon name="people" color={tintColor} />;
-};
-FriendsTabBarIcon.propTypes = {
-  tintColor: PropTypes.string.isRequired,
-};
-
-const ProfileTabBarIcon = ({tintColor}) => {
-  return <Icon name="account-circle" color={tintColor} />;
-};
-ProfileTabBarIcon.propTypes = {
-  tintColor: PropTypes.string.isRequired,
-};
+const HomeTabBarIcon = ({ tintColor }: { tintColor: string }): JSX.Element => <Icon name="home" color={tintColor} />;
+const FriendsTabBarIcon = ({ tintColor }: { tintColor: string }): JSX.Element => <Icon name="people" color={tintColor} />;
+const ProfileTabBarIcon = ({ tintColor }: { tintColor: string }): JSX.Element => <Icon name="account-circle" color={tintColor} />;
 
 const TabNavigator = createBottomTabNavigator(
   {

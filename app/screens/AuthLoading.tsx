@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   StyleSheet,
   View,
@@ -6,44 +6,17 @@ import {
   StatusBar,
   ActivityIndicator,
 } from 'react-native';
+import { NavigationStackProp } from 'react-navigation-stack';
 import userProfileExists from '../config/auth';
 import LogoHeader from '../components/LogoHeader';
-import {PRIMARY_COLOR} from '../config/theme';
-
-class AuthLoading extends Component {
-  componentDidMount() {
-    this.redirectAsync();
-  }
-
-  redirectAsync() {
-    if (userProfileExists({})) {
-      // TODO:
-      // loginSuccess(this.props.dispatch, {});
-    } else {
-      this.props.navigation.navigate('Auth');
-    }
-  }
-
-  render() {
-    return (
-      <Fragment>
-        {/* For Android status bar */}
-        <StatusBar backgroundColor={PRIMARY_COLOR} />
-        {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
-        <SafeAreaView style={styles.safeArea}>
-          <LogoHeader />
-          <View style={styles.container}>
-            <ActivityIndicator size="large" style={styles.indicator} />
-          </View>
-        </SafeAreaView>
-      </Fragment>
-    );
-  }
-}
+import { PRIMARY_COLOR } from '../config/theme';
 
 const styles = StyleSheet.create({
-  safeArea: {
+  firstSafeArea: {
+    flex: 0,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  secondSafeArea: {
     flex: 1,
     backgroundColor: '#FFF',
   },
@@ -57,5 +30,42 @@ const styles = StyleSheet.create({
     paddingTop: 50,
   },
 });
+
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
+
+class AuthLoading extends Component<Props> {
+  componentDidMount(): void {
+    this.redirectAsync();
+  }
+
+  redirectAsync(): void {
+    if (userProfileExists({})) {
+      // TODO:
+      // loginSuccess(this.props.dispatch, {});
+    } else {
+      this.props.navigation.navigate('Auth');
+    }
+  }
+
+  render(): JSX.Element {
+    return (
+      <Fragment>
+        {/* For Android status bar */}
+        <StatusBar backgroundColor={PRIMARY_COLOR} />
+        {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
+        <SafeAreaView style={styles.firstSafeArea} />
+        <SafeAreaView style={styles.secondSafeArea}>
+          <LogoHeader />
+          <View style={styles.container}>
+            <ActivityIndicator size="large" style={styles.indicator} />
+          </View>
+        </SafeAreaView>
+      </Fragment>
+    );
+  }
+}
 
 export default AuthLoading;

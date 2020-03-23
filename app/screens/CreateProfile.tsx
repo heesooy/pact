@@ -1,4 +1,4 @@
-import React, {Component, Fragment} from 'react';
+import React, { Component, Fragment } from 'react';
 import {
   StyleSheet,
   ScrollView,
@@ -8,22 +8,87 @@ import {
   StatusBar,
   Text,
 } from 'react-native';
-import {HelperText} from 'react-native-paper';
-import PropTypes from 'prop-types';
+import { HelperText } from 'react-native-paper';
+import { NavigationStackProp } from 'react-navigation-stack';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
 import RoundSeparator from '../components/RoundSeparator';
 import LogoTextHeader from '../components/LogoTextHeader';
-import {PRIMARY_COLOR, PRIMARY_TEXT_COLOR} from '../config/theme';
+import { PRIMARY_COLOR, PRIMARY_TEXT_COLOR } from '../config/theme';
 
-class CreateProfile extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+const styles = StyleSheet.create({
+  container: {
+    flexDirection: 'column',
+    justifyContent: 'space-between',
+    paddingLeft: 30,
+    paddingRight: 30,
+    backgroundColor: '#FFFFFF',
+  },
+  footer: {},
+  input: {
+    marginTop: 20,
+  },
+  firstSafeArea: {
+    flex: 0,
+    backgroundColor: PRIMARY_COLOR,
+  },
+  secondSafeArea: {
+    flex: 1,
+    backgroundColor: '#FFF',
+  },
+  twoTextboxes: {
+    flex: 1,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+  },
+  textbox: {
+    height: 'auto',
+    width: Dimensions.get('window').width * 0.4,
+  },
+  message: {
+    alignSelf: 'center',
+    marginBottom: 10,
+  },
+  text: {
+    fontSize: 20,
+    alignSelf: 'center',
+    color: PRIMARY_TEXT_COLOR,
+    paddingBottom: 15,
+  },
+  roundSep: {
+    height: 4,
+    marginTop: 15,
+    marginBottom: 15,
+  },
+});
+
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+}
+
+type State = {
+  /** first name of the user */
+  firstName?: string;
+  /** last name of the user */
+  lastName?: string;
+  /** username of the user */
+  username?: string;
+  /** any errors in the submission of a new profile */
+  error?: string;
+  /** message in the submission of a new profile */
+  message?: string;
+  /** whether the screen is loading */
+  loading?: boolean;
+}
+
+class CreateProfile extends Component<Props, State> {
+  state: State = {};
 
   // TODO: use :)
-  validateInput({firstName, lastName, username}) {
+  validateInput(
+    { firstName, lastName, username }: { firstName: string; lastName: string; username: string },
+  ): string | boolean {
     // Names can only contain alphabet characters and dashes
     const nameRegex = /^[a-z-]+$/i;
     if (!nameRegex.test(firstName) || !nameRegex.test(lastName)) {
@@ -44,83 +109,59 @@ class CreateProfile extends Component {
     return true;
   }
 
-  componentDidMount() {}
-
-  onfirstNameChange = firstName => {
-    this.setState({firstName});
+  onfirstNameChange = (firstName: string): void => {
+    this.setState({ firstName });
   };
 
-  onlastNameChange = lastName => {
-    this.setState({lastName});
+  onlastNameChange = (lastName: string): void => {
+    this.setState({ lastName });
   };
 
-  onUsernameChange = username => {
-    this.setState({username});
+  onUsernameChange = (username: string): void => {
+    this.setState({ username });
   };
 
-  onCreatePress = () => {
+  onCreatePress = (): void => {
     this.props.navigation.navigate('Home');
   };
 
-  renderMessage() {
-    const {error, message, loading} = this.state;
+  renderMessage(): JSX.Element {
+    const { error, message, loading } = this.state;
 
-    const text = () => {
-      if (loading) {
-        return 'Signing in...';
-      }
-      if (error === 'name-format') {
-        return 'Please enter a name';
-      }
-      if (error === 'username-length') {
-        return 'your username is too short';
-      }
-      if (error === 'PERMISSION_DENIED') {
-        return 'Username already exists';
-      }
-      return error;
-    };
+    let errorText;
 
-    const type = () => {
-      if (loading) {
-        return 'info';
-      }
-      if (error) {
-        return 'error';
-      }
-      return 'info';
-    };
+    if (loading) {
+      errorText = 'Signing in...';
+    } else {
+      errorText = error === 'auth/user-not-found' ? 'User not found' : message;
+    }
+
+    const messageType = !loading && error ? 'error' : 'info';
 
     return (
-      <View style={{alignSelf: 'center', marginBottom: 10}}>
-        <HelperText type={type()} visible={true}>
-          {text()}
+      <View style={styles.message}>
+        <HelperText type={messageType} visible={true}>
+          {errorText}
         </HelperText>
       </View>
     );
   }
 
-  render() {
-    const {firstName, lastName, username} = this.state;
+  render(): JSX.Element {
+    const { firstName, lastName, username } = this.state;
 
     return (
       <Fragment>
         {/* For Android status bar */}
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
-        <SafeAreaView style={{flex: 0, backgroundColor: PRIMARY_COLOR}} />
-        <SafeAreaView style={styles.safeArea}>
+        <SafeAreaView style={styles.firstSafeArea} />
+        <SafeAreaView style={styles.secondSafeArea}>
           <LogoTextHeader text="Welcome!" />
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.input}>
               <Text
-                style={{
-                  fontSize: 20,
-                  alignSelf: 'center',
-                  color: PRIMARY_TEXT_COLOR,
-                  paddingBottom: 15,
-                  // fontFamily: 'OctagenRoman',
-                }}>
+                style={styles.text}>
                 Just one last thing...
               </Text>
               <View style={styles.twoTextboxes}>
@@ -150,7 +191,7 @@ class CreateProfile extends Component {
             </View>
             <View>{this.renderMessage()}</View>
             <View style={styles.footer}>
-              <View style={{height: 4, marginTop: 15, marginBottom: 15}}>
+              <View style={styles.roundSep}>
                 <RoundSeparator />
               </View>
               <RoundButton
@@ -165,39 +206,5 @@ class CreateProfile extends Component {
     );
   }
 }
-
-// TODO: look into this. replicate on other comps?
-CreateProfile.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flexDirection: 'column',
-    justifyContent: 'space-between',
-    paddingLeft: 30,
-    paddingRight: 30,
-    backgroundColor: '#FFFFFF',
-  },
-  footer: {},
-  input: {
-    marginTop: 20,
-  },
-  safeArea: {
-    flex: 1,
-    backgroundColor: '#FFF',
-  },
-  twoTextboxes: {
-    flex: 1,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-  },
-  textbox: {
-    height: 'auto',
-    width: Dimensions.get('window').width * 0.4,
-  },
-});
 
 export default CreateProfile;

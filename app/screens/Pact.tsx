@@ -1,4 +1,4 @@
-import React, {Component} from 'react';
+import React, { Component } from 'react';
 import {
   StyleSheet,
   Text,
@@ -7,110 +7,16 @@ import {
   Image,
   Dimensions,
 } from 'react-native';
-import PropTypes from 'prop-types';
-import {Icon, Button, Paragraph, Dialog, Portal} from 'react-native-elements';
-import {FAB, Divider} from 'react-native-paper';
-import {TouchableOpacity} from 'react-native-gesture-handler';
-import _ from 'lodash';
-import RoundButton from '../components/RoundButton';
-import {BACKGROUND_COLOR, PRIMARY_COLOR} from '../config/theme';
+import { Icon } from 'react-native-elements';
+import { Divider } from 'react-native-paper';
+import { TouchableOpacity } from 'react-native-gesture-handler';
+import { NavigationStackProp } from 'react-navigation-stack';
+import { BACKGROUND_COLOR, PRIMARY_COLOR } from '../config/theme';
 import CheckinDialog from '../components/CheckinDialog';
 import ActivityCircles from '../components/ActivityCircles';
 import TextboxLabel from '../components/TextboxLabel';
 import RoundedCard from '../components/RoundedCard';
-
-class Pact extends Component {
-  static navigationOptions = ({navigation}) => {
-    return {
-      title: navigation.getParam('title', 'Pact'),
-      headerRight: () => (
-        <TouchableOpacity
-          onPress={navigation.getParam('editPressed')}
-          style={{marginRight: 20}}>
-          <Icon name="edit" type="material" color="#7E7E7E" />
-        </TouchableOpacity>
-      ),
-    };
-  };
-
-  constructor(props) {
-    super(props);
-  }
-
-  componentDidMount() {
-    this.props.navigation.setParams({
-      title: this.props.name,
-      editPressed: this.editPressed,
-    });
-  }
-
-  editPressed = () => {
-    const {navigation, pactId, name, description, participants} = this.props;
-
-    const pactInfo = {
-      pactId,
-      name,
-      description,
-      participants,
-    };
-    // Load pact information to edit screen
-    _.each(pactInfo, (value, prop) => {
-      this.props.editPactUpdate({prop, value});
-    });
-
-    navigation.navigate('EditPact');
-  };
-
-  render() {
-    return (
-      <View style={{flex: 1, backgroundColor: '#EEF8F7'}}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <View style={styles.whiteContainer}>
-            <View style={styles.todayLabel}>
-              <Text style={styles.todayLabelText}>TODAY</Text>
-              <Icon
-                name="chevron-down"
-                type="material-community"
-                color={PRIMARY_COLOR}
-              />
-            </View>
-            <ActivityCircles label="Person 1" />
-            <ActivityCircles label="Person 2" />
-            <Divider
-              style={{
-                marginTop: 10,
-                marginBottom: 10,
-                marginRight: 25,
-                marginLeft: 25,
-                height: 2,
-                backgroundColor: '#EEF8F7',
-              }}
-            />
-            <Text style={styles.description}>{this.props.description}</Text>
-          </View>
-          <Image
-            style={styles.bgImageContainer}
-            source={require('../../assets/images/waveBG.png')}
-            resizeMode="contain"
-          />
-          <View style={styles.bgContainer}>
-            <TextboxLabel text="FEED" style={{marginLeft: 40}} />
-            <RoundedCard text="Text" onPress={() => null} />
-            <RoundedCard text="Text" onPress={() => null} />
-            <RoundedCard text="Text" onPress={() => null} />
-          </View>
-        </ScrollView>
-        <CheckinDialog />
-      </View>
-    );
-  }
-}
-
-Pact.propTypes = {
-  navigation: PropTypes.shape({
-    navigate: PropTypes.func.isRequired,
-  }).isRequired,
-};
+import waveBg from '../../assets/images/waveBG.png';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -155,6 +61,110 @@ const styles = StyleSheet.create({
     paddingRight: 25,
     textAlign: 'center',
   },
+  headerRight: {
+    marginRight: 20,
+  },
+  divider: {
+    marginTop: 10,
+    marginBottom: 10,
+    marginRight: 25,
+    marginLeft: 25,
+    height: 2,
+    backgroundColor: '#EEF8F7',
+  },
+  textbox: {
+    marginLeft: 40,
+  },
+  parentView: {
+    flex: 1,
+    backgroundColor: '#EEF8F7',
+  },
 });
+
+type Props = {
+  /** navigation prop that is in all screens */
+  navigation: NavigationStackProp<{}>;
+  name: string;
+  description: string;
+}
+
+class Pact extends Component<Props> {
+  static navigationOptions = ({ navigation }: Props): {
+    headerRight: () => JSX.Element;
+    title: string;
+  } => ({
+    title: navigation.getParam('title', 'Pact'),
+    headerRight: (): JSX.Element => (
+      <TouchableOpacity
+        onPress={navigation.getParam('editPressed')}
+        style={styles.headerRight}>
+        <Icon name="edit" type="material" color="#7E7E7E" />
+      </TouchableOpacity>
+    ),
+  });
+
+  componentDidMount(): void {
+    this.props.navigation.setParams({
+      title: this.props.name,
+      editPressed: this.editPressed,
+    });
+  }
+
+  editPressed = (): void => {
+    // const {
+    //   navigation, pactId, name, description, participants,
+    // } = this.props;
+
+    // const pactInfo = {
+    //   pactId,
+    //   name,
+    //   description,
+    //   participants,
+    // };
+    // Load pact information to edit screen
+    // _.each(pactInfo, (value, prop) => {
+    //   this.props.editPactUpdate({ prop, value });
+    // });
+
+    this.props.navigation.navigate('EditPact');
+  };
+
+  render(): JSX.Element {
+    return (
+      <View style={styles.parentView}>
+        <ScrollView contentContainerStyle={styles.container}>
+          <View style={styles.whiteContainer}>
+            <View style={styles.todayLabel}>
+              <Text style={styles.todayLabelText}>TODAY</Text>
+              <Icon
+                name="chevron-down"
+                type="material-community"
+                color={PRIMARY_COLOR}
+              />
+            </View>
+            <ActivityCircles label="Person 1" />
+            <ActivityCircles label="Person 2" />
+            <Divider
+              style={styles.divider}
+            />
+            <Text style={styles.description}>{this.props.description}</Text>
+          </View>
+          <Image
+            style={styles.bgImageContainer}
+            source={waveBg}
+            resizeMode="contain"
+          />
+          <View style={styles.bgContainer}>
+            <TextboxLabel text="FEED" />
+            <RoundedCard text="Text" onPress={(): void => undefined} />
+            <RoundedCard text="Text" onPress={(): void => undefined} />
+            <RoundedCard text="Text" onPress={(): void => undefined} />
+          </View>
+        </ScrollView>
+        <CheckinDialog onChangeText={(): void => undefined} />
+      </View>
+    );
+  }
+}
 
 export default Pact;

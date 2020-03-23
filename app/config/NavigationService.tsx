@@ -1,13 +1,13 @@
 // NavigationService.js
-import {NavigationActions} from 'react-navigation';
+import { NavigationActions, NavigationContainerComponent } from 'react-navigation';
 
-let navigator;
+let navigator: NavigationContainerComponent;
 
-function setTopLevelNavigator(navigatorRef) {
+function setTopLevelNavigator(navigatorRef: NavigationContainerComponent): void {
   navigator = navigatorRef;
 }
 
-function navigate(routeName, params) {
+function navigate(routeName: string, params: Record<string, string | Function>): void {
   navigator.dispatch(
     NavigationActions.navigate({
       routeName,

@@ -1,14 +1,6 @@
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
-import {BACKGROUND_COLOR} from '../config/theme';
-
-const AddFriends = () => {
-  return (
-    <View style={styles.container}>
-      <Text style={styles.welcome}>This is the Add Friends page!</Text>
-    </View>
-  );
-};
+import { StyleSheet, Text, View } from 'react-native';
+import { BACKGROUND_COLOR } from '../config/theme';
 
 const styles = StyleSheet.create({
   container: {
@@ -23,5 +15,11 @@ const styles = StyleSheet.create({
     margin: 10,
   },
 });
+
+const AddFriends: React.FC = () => (
+  <View style={styles.container}>
+    <Text style={styles.welcome}>This is the Add Friends page!</Text>
+  </View>
+);
 
 export default AddFriends;
