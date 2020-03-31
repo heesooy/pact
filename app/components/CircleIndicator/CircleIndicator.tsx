@@ -10,11 +10,7 @@ type Props = {
 }
 
 const CircleIndicator: React.FC<Props> = ({ checked, active }) => {
-  let opacity = 0.35;
-
-  if (!checked) {
-    opacity = 0;
-  }
+  let opacity = !checked ? 0 : 0.35;
 
   if (active) {
     opacity = 1;

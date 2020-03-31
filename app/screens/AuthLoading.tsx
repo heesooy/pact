@@ -42,7 +42,7 @@ class AuthLoading extends Component<Props> {
 
   redirectAsync(): void {
     if (userProfileExists({})) {
-      // TODO:
+      // TODO
       // loginSuccess(this.props.dispatch, {});
     } else {
       this.props.navigation.navigate('Auth');

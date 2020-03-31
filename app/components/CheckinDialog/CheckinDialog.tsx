@@ -11,24 +11,20 @@ type Props = {
 }
 
 type State = {
-  visible: boolean;
+  isVisible: boolean;
 }
 
 class CheckinDialog extends React.Component<Props, State> {
-  constructor(props: Props) {
-    super(props);
-
-    this.state = {
-      visible: false,
-    };
-  }
+  state: State = {
+    isVisible: false,
+  };
 
   showDialog = (): void => {
-    this.setState({ visible: true });
+    this.setState({ isVisible: true });
   }
 
   hideDialog = (): void => {
-    this.setState({ visible: false });
+    this.setState({ isVisible: false });
   }
 
   render(): JSX.Element {
@@ -42,7 +38,7 @@ class CheckinDialog extends React.Component<Props, State> {
           color="#FFF"
         />
         <Portal>
-          <Dialog visible={this.state.visible} onDismiss={this.hideDialog}>
+          <Dialog visible={this.state.isVisible} onDismiss={this.hideDialog}>
             <Dialog.Title style={styles.dialog}>Check In</Dialog.Title>
             <Dialog.Content>
               <Textbox

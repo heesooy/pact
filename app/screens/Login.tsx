@@ -16,8 +16,6 @@ const styles = StyleSheet.create({
     flex: 1,
     flexDirection: 'column',
     justifyContent: 'space-between',
-    // TODO: remove all hex values
-    // TODO: no unnecessary magic numbers
     backgroundColor: '#FFFFFF',
     paddingLeft: 30,
     paddingRight: 30,

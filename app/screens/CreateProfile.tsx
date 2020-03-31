@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
-  twoTextboxes: {
+  textboxContainer: {
     flex: 1,
     flexDirection: 'row',
     justifyContent: 'space-between',
@@ -157,7 +157,7 @@ class CreateProfile extends Component<Props, State> {
                 style={styles.text}>
                 Just one last thing...
               </Text>
-              <View style={styles.twoTextboxes}>
+              <View style={styles.textboxContainer}>
                 <View style={styles.textbox}>
                   <Textbox
                     label="FIRST NAME"

@@ -11,7 +11,7 @@ type State = {
 
 // https://www.npmjs.com/package/react-native-modal-datetime-picker
 class TimePicker extends Component<{}, State> {
-  state = {
+  state: State = {
     isDateTimePickerVisible: false,
   };
 

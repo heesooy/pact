@@ -15,6 +15,7 @@ const CircleButton: React.FC<Props> = ({ onPress, text, highlight }) => {
       backgroundColor: `rgba(83, 199, 190,${highlight ? 1 : 0.32})`,
     },
   });
+
   return (
     <TouchableRipple
       onPress={onPress}
