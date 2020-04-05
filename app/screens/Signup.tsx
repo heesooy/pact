@@ -10,8 +10,7 @@ import { NavigationStackProp } from 'react-navigation-stack';
 import { HelperText } from 'react-native-paper';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
-import RoundSeparator from '../components/RoundSeparator';
-import LogoTextHeader from '../components/LogoTextHeader';
+import LogoHeader from '../components/LogoHeader';
 import { PRIMARY_COLOR } from '../config/theme';
 
 const styles = StyleSheet.create({
@@ -52,44 +51,21 @@ const styles = StyleSheet.create({
 
 type Props = {
   navigation: NavigationStackProp<{}>;
-  email: string;
 }
 
 type State = {
   email?: string;
   password?: string;
   passwordConfirmation?: string;
+  firstName?: string;
+  lastName?: string;
+  username?: string;
   error?: string;
-  message?: string;
-  loading?: boolean;
 }
 
 class Signup extends Component<Props, State> {
-  mounted: boolean;
-
-  constructor(props: Props) {
-    super(props);
-    this.state = {};
-    this.mounted = false;
-
-    const loginEmail = this.props.navigation.getParam('email', '');
-    if (loginEmail !== '') {
-      this.onEmailChange(loginEmail);
-    }
-  }
-
-  componentDidMount(): void {
-    this.mounted = true;
-  }
-
-  componentWillUnmount(): void {
-    this.mounted = false;
-  }
-
   onEmailChange = (email: string): void => {
-    if (this.mounted) {
-      this.setState({ email });
-    }
+    this.setState({ email });
   };
 
   onPasswordChange = (password: string): void => {
@@ -100,94 +76,15 @@ class Signup extends Component<Props, State> {
     this.setState({ passwordConfirmation });
   };
 
-  signupSuccess(): void {
-    // dispatch({ type: SIGNUP_SUCCESS });
-
-    // Display this message on the login page
-    // dispatch(loginSetMessage('Please verify your email.'));
-    this.props.navigation.navigate('Login');
-  }
-
-  signupFail(): void {
-    // dispatch({
-    //   type: SIGNUP_FAIL,
-    //   payload: error.code,
-    // });
-  }
-
-  // TODO: password must match with confirmation
+  // TODO password must match with confirmation and be 8 characters
   onSignupPress = (): void => {
     // const {email, password, passwordConfirmation} = this.state;
-    // return (dispatch) => {
-    //   dispatch({ type: SIGNUP_SUBMIT });
-    //   if (password !== passwordConfirm) {
-    //     signupFail(dispatch, { code: 'password-match' });
-    //     return;
-    //   }
-    // firebase.auth().createUserWithEmailAndPassword(email, password)
-    //   .then(() => {
-    //     firebase.auth().currentUser.sendEmailVerification()
-    //       .then(() => {
-    //         firebase.auth().signOut();
-    //         signupSuccess(dispatch);
-    //       })
-    //       .catch((error) => {
-    //         signupFail(dispatch, error);
-    //       });
-    //   })
-    //   .catch((error) => {
-    //     signupFail(dispatch, error);
-    //   });
-    // };
+    // this.props.navigation.navigate('Home');
   };
 
   onBackPress = (): void => {
     this.props.navigation.navigate('Login');
   };
-
-  renderMessage(): JSX.Element {
-    const { error, loading } = this.state;
-
-    const text = (): string | undefined => {
-      if (loading) {
-        return 'Signing in...';
-      }
-      if (error === 'auth/user-not-found') {
-        return 'User not found';
-      }
-      if (error === 'auth/invalid-email') {
-        return 'Invalid Email';
-      }
-      if (error === 'auth/wrong-password') {
-        return 'Wrong Password';
-      }
-      if (error === 'auth/weak-password') {
-        return 'Please use a stronger password';
-      }
-      if (error === 'password-match') {
-        return 'Passwords do not match';
-      }
-      return error;
-    };
-
-    const type = (): string => {
-      if (loading) {
-        return 'info';
-      }
-      if (error) {
-        return 'error';
-      }
-      return 'info';
-    };
-
-    return (
-      <View style={styles.centerAlign}>
-        <HelperText type={type()} visible={true}>
-          {text()}
-        </HelperText>
-      </View>
-    );
-  }
 
   render(): JSX.Element {
     return (
@@ -196,41 +93,39 @@ class Signup extends Component<Props, State> {
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
         <SafeAreaView style={styles.firstSafeArea} />
+
         <SafeAreaView style={styles.secondSafeArea}>
-          <LogoTextHeader text="join pact" />
+          <LogoHeader />
           <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.input}>
               <Textbox
                 label="EMAIL"
                 placeholder="mail@address.com"
                 onChangeText={this.onEmailChange}
-                value={this.props.email}
                 keyboardType="email-address"
               />
+
               <Textbox
                 label="PASSWORD"
-                // secureTextEntry
                 placeholder="Use 6 or more characters"
                 onChangeText={this.onPasswordChange}
               />
+
               <Textbox
                 label="CONFIRM PASSWORD"
-                // secureTextEntry
                 placeholder="Re-enter password"
                 onChangeText={this.onPasswordConfirmChange}
                 style={styles.confirmPass}
               />
             </View>
-            <View style={styles.roundSep}>
-              {this.renderMessage()}
-              <RoundSeparator />
-            </View>
+
             <View style={styles.footer}>
               <RoundButton
                 mode="contained"
                 title="Sign Up"
                 onPress={this.onSignupPress}
               />
+
               <RoundButton
                 mode="outlined"
                 title="Back"

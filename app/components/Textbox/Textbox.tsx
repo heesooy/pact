@@ -9,6 +9,7 @@ type Props = {
   placeholder?: string | undefined;
   value?: string | undefined;
   onChangeText?: (((text: string) => void) & Function) | undefined;
+  onFocus?: () => void | undefined;
   label?: string;
   keyboardType?: 'default' | 'email-address' | 'numeric' | 'phone-pad' | 'number-pad' | 'decimal-pad' | 'visible-password' | 'ascii-capable' | 'numbers-and-punctuation' | 'url' | 'name-phone-pad' | 'twitter' | 'web-search' | undefined;
   autoCompleteType?: 'name' | 'username' | 'password' | 'cc-csc' | 'cc-exp' | 'cc-exp-month' | 'cc-exp-year' | 'cc-number' | 'email' | 'postal-code' | 'street-address' | 'tel' | 'off' | undefined;
@@ -22,6 +23,7 @@ const Textbox: React.FC<Props> = ({
   placeholder,
   value,
   onChangeText,
+  onFocus,
   label,
   keyboardType,
   autoCompleteType,
@@ -37,6 +39,7 @@ const Textbox: React.FC<Props> = ({
       placeholder={placeholder}
       value={value}
       onChangeText={onChangeText}
+      onFocus={onFocus}
       autoCompleteType={autoCompleteType || 'off'}
       autoCapitalize="none"
       keyboardType={keyboardType}

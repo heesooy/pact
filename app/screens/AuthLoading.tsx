@@ -7,7 +7,6 @@ import {
   ActivityIndicator,
 } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
-import userProfileExists from '../config/auth';
 import LogoHeader from '../components/LogoHeader';
 import { PRIMARY_COLOR } from '../config/theme';
 
@@ -41,12 +40,8 @@ class AuthLoading extends Component<Props> {
   }
 
   redirectAsync(): void {
-    if (userProfileExists({})) {
-      // TODO
-      // loginSuccess(this.props.dispatch, {});
-    } else {
-      this.props.navigation.navigate('Auth');
-    }
+    // TODO allow login more than one session at a time
+    this.props.navigation.navigate('Auth');
   }
 
   render(): JSX.Element {
