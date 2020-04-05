@@ -4,10 +4,9 @@ import {
 } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { HelperText } from 'react-native-paper';
-import userProfileExists from '../config/auth';
+import auth from '../lib/auth';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
-import RoundSeparator from '../components/RoundSeparator';
 import LogoHeader from '../components/LogoHeader';
 import { PRIMARY_COLOR } from '../config/theme';
 
@@ -34,18 +33,9 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: '#FFF',
   },
-  wrongPassword: {
-    marginLeft: 15,
-  },
-  message: {
-    alignSelf: 'center',
-    marginBottom: 10,
-  },
-  textbox: {
-    marginBottom: 0,
-  },
   invalidEmail: {
     marginLeft: 15,
+    fontSize: 16,
   },
 });
 
@@ -54,15 +44,16 @@ type Props = {
 }
 
 type State = {
-  email?: string;
-  password?: string;
+  email: string;
+  password: string;
   error?: string;
-  message?: string;
-  loading?: boolean;
 }
 
 class Login extends Component<Props, State> {
-  state: State = {};
+  state: State = {
+    email: '',
+    password: '',
+  };
 
   onEmailChange = (email: string): void => {
     this.setState({ email });
@@ -72,63 +63,24 @@ class Login extends Component<Props, State> {
     this.setState({ password });
   };
 
-  loginSuccess(user: Readonly<{}>): void {
-    if (userProfileExists(user)) {
+  onLoginPress = async (): Promise<void> => {
+    const { email, password } = this.state;
+
+    const authToken = await auth.loginAttempt(email, password);
+
+    if (authToken !== null) {
       this.props.navigation.navigate('Home');
     } else {
-      this.props.navigation.navigate('CreateProfile');
+      this.setState({ error: '' }); // TODO support error messages from API
     }
-  }
-
-  loginFail(error: string): void {
-    // TODO: handle
-    // dispatch({
-    //   type: LOGIN_FAIL,
-    //   payload: error.code,
-    // });
-  }
-
-  onLoginPress = (): void => {
-    // const { email, password } = this.state;
-
-    // if (true) {
-    this.loginSuccess({});
-    // } else {
-    // this.loginFail('Incorrect username/password.');
-    // }
   };
 
   onSignupPress = (): void => {
-    this.props.navigation.navigate('Signup', {
-      email: this.state.email,
-    });
+    this.props.navigation.navigate('Signup');
   };
 
-  onResetPassword = (): void => {
-    this.props.navigation.navigate('PasswordReset');
-  };
-
-  renderMessage(): JSX.Element {
-    const { message, loading } = this.state;
-    const { error } = this.state;
-
-    let errorText;
-
-    if (loading) {
-      errorText = 'Signing in...';
-    } else {
-      errorText = error === 'auth/user-not-found' ? 'User not found' : message;
-    }
-
-    const messageType = !loading && error ? 'error' : 'info';
-
-    return (
-      <View style={styles.message}>
-        <HelperText type={messageType} visible={true}>
-          {errorText}
-        </HelperText>
-      </View>
-    );
+  resetError = (): void => {
+    this.setState({ error: undefined });
   }
 
   render(): JSX.Element {
@@ -140,6 +92,7 @@ class Login extends Component<Props, State> {
         <StatusBar backgroundColor={PRIMARY_COLOR} />
         {/* For iOS (doesn't support StatusBar--use SafeAreaView) */}
         <SafeAreaView style={styles.firstSafeArea} />
+
         <SafeAreaView style={styles.secondSafeArea}>
           <LogoHeader />
           <View style={styles.container}>
@@ -148,42 +101,35 @@ class Login extends Component<Props, State> {
                 label="EMAIL"
                 placeholder="mail@address.com"
                 onChangeText={this.onEmailChange}
+                onFocus={this.resetError}
                 value={email}
                 keyboardType="email-address"
-                style={styles.textbox}
               />
-              <HelperText
-                type="error"
-                visible={this.state.error === 'auth/invalid-email'}
-                style={styles.invalidEmail}>
-                Invalid Email
-              </HelperText>
+
               <Textbox
                 label="PASSWORD"
                 secureTextEntry
                 placeholder="Enter password"
                 onChangeText={this.onPasswordChange}
                 value={password}
-                style={styles.textbox}
+                onFocus={this.resetError}
               />
+
               <HelperText
                 type="error"
-                visible={this.state.error === 'auth/wrong-password'}
-                onPress={this.onResetPassword}
-                style={styles.wrongPassword}>
-                Forgot Password?
+                visible={this.state.error !== undefined}
+                style={styles.invalidEmail}>
+                Invalid email address or password.
               </HelperText>
             </View>
-            <View>
-              {this.renderMessage()}
-              <RoundSeparator />
-            </View>
+
             <View style={styles.footer}>
               <RoundButton
                 mode="contained"
                 title="Sign Up"
                 onPress={this.onSignupPress}
               />
+
               <RoundButton
                 mode="outlined"
                 title="Log In"

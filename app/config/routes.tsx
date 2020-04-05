@@ -17,8 +17,6 @@ import Profile from '../screens/Profile';
 import EditProfile from '../screens/EditProfile';
 import AddFriends from '../screens/AddFriends';
 import AuthLoading from '../screens/AuthLoading';
-import CreateProfile from '../screens/CreateProfile';
-import PasswordReset from '../screens/PasswordReset';
 import { PRIMARY_COLOR } from './theme';
 
 /* LogIn Page Navigation Properties */
@@ -34,12 +32,6 @@ const LoginStack = createStackNavigator(
       screen: Signup,
       navigationOptions: {
         title: 'Sign Up',
-      },
-    },
-    PasswordReset: {
-      screen: PasswordReset,
-      navigationOptions: {
-        title: 'Reset Password',
       },
     },
   },
@@ -174,7 +166,6 @@ const Root = createAnimatedSwitchNavigator(
     AuthLoading,
     Auth: LoginStack,
     Main: TabNavigator,
-    CreateProfile,
   },
   {
     transition:
