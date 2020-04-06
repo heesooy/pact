@@ -9,6 +9,7 @@ import {
 import { NavigationStackProp } from 'react-navigation-stack';
 import LogoHeader from '../components/LogoHeader';
 import { PRIMARY_COLOR } from '../config/theme';
+import auth from '../lib/auth';
 
 const styles = StyleSheet.create({
   firstSafeArea: {
@@ -36,12 +37,12 @@ type Props = {
 
 class AuthLoading extends Component<Props> {
   componentDidMount(): void {
-    this.redirectAsync();
+    this.redirect();
   }
 
-  redirectAsync(): void {
-    // TODO allow login more than one session at a time
-    this.props.navigation.navigate('Auth');
+  async redirect(): Promise<void> {
+    const isLoggedIn = auth.getUserPacts();
+    this.props.navigation.navigate(isLoggedIn ? 'Home' : 'Auth');
   }
 
   render(): JSX.Element {

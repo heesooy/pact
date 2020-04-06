@@ -51,16 +51,8 @@ class Profile extends Component<Props, State> {
     this.props.navigation.navigate('EditProfile');
   };
 
-  signOutPressed(): void {
-    // return (dispatch) => {
-    //   // Display this message on the login page
-    //   // firebase.auth().signOut();
-    //   dispatch(loginSetMessage('You\'ve been signed out.'));
-    //   NavigationService.navigate('Login');
-    //   setTimeout(() => {
-    //     dispatch({ type: PROFILE_SIGNOUT });
-    //   }, 500);
-    // };
+  signOutPressed = (): void => {
+    this.props.navigation.navigate('Auth');
   }
 
   render(): JSX.Element {

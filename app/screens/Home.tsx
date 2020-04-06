@@ -4,7 +4,9 @@ import { NavigationStackProp } from 'react-navigation-stack';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BACKGROUND_COLOR } from '../config/theme';
+import { Pact } from '../lib/types';
 import PactCard from '../components/PactCard';
+import auth from '../lib/auth';
 
 const styles = StyleSheet.create({
   container: {
@@ -24,15 +26,8 @@ type Props = {
   navigation: NavigationStackProp<{}>;
 }
 
-type Pact = {
-  name: string;
-  description: string;
-  pactId: string;
-};
-
 type State = {
-  // should be prop?
-  pacts?: [Pact];
+  pacts: Pact[];
 }
 
 class Home extends Component<Props, State> {
@@ -50,39 +45,18 @@ class Home extends Component<Props, State> {
     ),
   });
 
-  state: State = {};
+  state: State = {
+    pacts: [],
+  };
 
-  pactsFetch(): void {
-    // const { currentUser } = firebase.auth();
-    // const dbRef = firebase.database().ref();
-    // dbRef.child('/user-pacts/' + currentUser.uid).on('value', (snapshot) => {
-    //   if (!snapshot.exists()) {
-    //     // User has no pacts
-    //     dispatch({ type: PACTS_FETCH_SUCCESS, payload: null });
-    //   } else {
-    //     const pactIds = Object.keys(snapshot.val());
-    //     // Pipelined fetch all pacts user belongs to
-    //     Promise.all(
-    //       pactIds.map(id => dbRef.child('/pacts/' + id).once('value')),
-    //     ).then((dataSnapshot) => {
-    //       const pacts = [];
-    //       dataSnapshot.forEach((childSnapshot) => {
-    //         const pactId = childSnapshot.key;
-    //         const data = childSnapshot.val();
-    //         data.pactId = pactId;
-    //         pacts.push(data);
-    //       });
-    //       dispatch({ type: PACTS_FETCH_SUCCESS, payload: pacts });
-    //     });
-    //   }
-    // });
-  }
+  async pactsFetch(): Promise<void> {
+    const pacts = await auth.getUserPacts();
 
-  pactUpdate(): void {
-    // return {
-    //   type: PACT_UPDATE,
-    //   payload: {prop, value},
-    // };
+    if (!pacts) {
+      return;
+    }
+
+    this.setState({ pacts });
   }
 
   componentDidMount(): void {
@@ -101,19 +75,17 @@ class Home extends Component<Props, State> {
   };
 
   addPressed = (): void => {
-    // EditPact screen with no redux state passed in => Create Pact
+    // EditPact screen with no nav params => Create Pact
     this.props.navigation.navigate('EditPact');
   };
 
-  renderItem({ item, index }: {item: Pact; index: number}): JSX.Element {
-    return (
-      <PactCard
-        onPress={(): void => this.pactPressed(index)}
-        title={item.name}
-        subtitle={item.description}
-      />
-    );
-  }
+  renderItem = ({ item, index }: {item: Pact; index: number}): JSX.Element => (
+    <PactCard
+      onPress={(): void => this.pactPressed(index)}
+      title={item.title}
+      subtitle={item.description}
+    />
+  );
 
   render(): JSX.Element {
     return (

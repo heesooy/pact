@@ -66,9 +66,9 @@ class Login extends Component<Props, State> {
   onLoginPress = async (): Promise<void> => {
     const { email, password } = this.state;
 
-    const authToken = await auth.loginAttempt(email, password);
+    const isValidLogin = await auth.loginAttempt(email, password);
 
-    if (authToken !== null) {
+    if (isValidLogin) {
       this.props.navigation.navigate('Home');
     } else {
       this.setState({ error: '' }); // TODO support error messages from API
