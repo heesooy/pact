@@ -10,7 +10,7 @@ import { Transition } from 'react-native-reanimated';
 import Login from '../screens/Login';
 import Signup from '../screens/Signup';
 import Home from '../screens/Home';
-import Pact from '../screens/Pact';
+import PactInfo from '../screens/PactInfo';
 import EditPact from '../screens/EditPact';
 import Friends from '../screens/Friends';
 import Profile from '../screens/Profile';
@@ -46,7 +46,7 @@ const HomeStack = createStackNavigator({
     screen: Home,
   },
   Pact: {
-    screen: Pact,
+    screen: PactInfo,
   },
   EditPact: {
     screen: EditPact,

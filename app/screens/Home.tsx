@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { StyleSheet, FlatList } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
+import { withNavigationFocus } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { BACKGROUND_COLOR } from '../config/theme';
@@ -24,6 +25,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   navigation: NavigationStackProp<{}>;
+  isFocused: boolean;
 }
 
 type State = {
@@ -64,18 +66,18 @@ class Home extends Component<Props, State> {
     this.pactsFetch();
   }
 
-  pactPressed = (index: number): void => {
-    // const {pacts} = this.props;
+  componentDidUpdate(prevProps: Props): void {
+    if (!prevProps.isFocused && this.props.isFocused) {
+      this.pactsFetch();
+    }
+  }
 
-    // Load pact information to the 'Pact' screen
-    // _.each(pacts[index], (value, prop) => {
-    //   this.pactUpdate({prop, value});
-    // });
-    this.props.navigation.navigate('Pact');
+
+  pactPressed = (index: number): void => {
+    this.props.navigation.navigate('Pact', { pact: this.state.pacts[index] });
   };
 
   addPressed = (): void => {
-    // EditPact screen with no nav params => Create Pact
     this.props.navigation.navigate('EditPact');
   };
 
@@ -99,4 +101,4 @@ class Home extends Component<Props, State> {
   }
 }
 
-export default Home;
+export default withNavigationFocus(Home);

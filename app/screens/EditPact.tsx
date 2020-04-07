@@ -9,11 +9,12 @@ import {
 import { NavigationStackProp } from 'react-navigation-stack';
 import Textbox from '../components/Textbox';
 import RoundButton from '../components/RoundButton';
-import CircleButtons from '../components/CircleButtons';
 import RoundSeparator from '../components/RoundSeparator';
 import { PRIMARY_COLOR } from '../config/theme';
 import TextboxLabel from '../components/TextboxLabel';
 import TimePicker from '../components/TimePicker';
+import { Pact } from '../lib/types';
+import auth from '../lib/auth';
 
 const styles = StyleSheet.create({
   container: {
@@ -52,99 +53,68 @@ type Props = {
 }
 
 type State = {
-  pactId?: string;
-  pactName?: string;
-  pactDescription?: string;
-  pactParticipants?: string;
+  pact: Pact;
+  isNewPact: boolean;
 }
 
 class EditPact extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props): { title: string } => ({
-    title: navigation.getParam('title', 'Edit Pact'),
+    title: navigation.getParam('title', 'Create Pact'),
   });
 
-  state: State = {};
+  constructor(props: Props) {
+    super(props);
 
-  editPactCreate(/* name?: string, description?: string, friendUid?: string */): void {
-    // const { currentUser } = firebase.auth();
-    // const pactData = {
-    //   name,
-    //   description,
-    //   participants: {
-    //     [currentUser.uid]: true,
-    //     [friendUid]: true,
-    //   },
-    // };
-    // // Generate ID for new Pact
-    // const dbRef = firebase.database().ref();
-    // const newPactId = dbRef.child('pacts').push().key;
-    // // Write the new Pact data into pacts collection
-    // // Then simultaneously in the users' pact list
-    // dbRef.child('pacts/' + newPactId).set(pactData).then(() => {
-    //   const updates = {
-    //     ['/user-pacts/' + currentUser.uid + '/' + newPactId]: true,
-    //     ['/user-pacts/' + friendUid + '/' + newPactId]: true,
-    //   };
-    //   dbRef.update(updates).then(() => {
-    //     dispatch({ type: EDIT_PACT_CREATE });
-    //     // Update the 'Pact' screen that we'll go back to
-    //     pactData.pactId = newPactId;
-    //     _.each(pactData, (value, prop) => {
-    //       dispatch(pactUpdate({ prop, value }));
-    //     });
-    //   });
-    // });
+    const pact = this.props.navigation.getParam('pact');
+
+    this.state = {
+      pact: pact !== undefined ? pact : {
+        title: '',
+        description: '',
+        streak: 1,
+        periodLength: 7,
+        periodTarget: 5,
+        privacyLevel: 'private',
+        participants: ['asherd', 'asherdale'],
+      },
+      isNewPact: !pact,
+    };
   }
 
-  editPactSave(
-  /* pactId?: string, name?: string, description?: string, friendUid?: string */
-  ): void {
-    // const { currentUser } = firebase.auth();
-    // const dbRef = firebase.database().ref();
-    // dbRef.child('/pacts/' + pactId + '/participants').once('value', (snapshot) => {
-    //   // Remove pact from old friend's list
-    //   const users = Object.keys(snapshot.val());
-    //   const oldFriendUid = (users[0] === currentUser.uid) ? users[1] : users[0];
-    //   dbRef.child('/user-pacts/' + oldFriendUid + '/' + pactId).remove();
-    // }).then(() => {
-    //   const pactData = {
-    //     name,
-    //     description,
-    //     participants: {
-    //       [currentUser.uid]: true,
-    //       [friendUid]: true,
-    //     },
-    //   };
-    //   // Send updated pact data
-    //   dbRef.child('/pacts/' + pactId).set(pactData).then(() => {
-    //     // Update new friend's pact list
-    //     dbRef.child('/user-pacts/' + friendUid).update({ [pactId]: true }).then(() => {
-    //       dispatch({ type: EDIT_PACT_SAVE_SUCCESS });
-    //       // Update the 'Pact' screen that we'll go back to
-    //       pactData.pactId = pactId;
-    //       _.each(pactData, (value, prop) => {
-    //         dispatch(pactUpdate({ prop, value }));
-    //       });
-    //       // Also update the list at the Home screen
-    //       dispatch(pactsFetch());
-    //     });
-    //   });
-    // });
+  async createPactSave(pact: Pact): Promise<void> {
+    if (!pact.title || !pact.description) {
+      return;
+    }
+
+    await auth.createPact(pact);
+    this.props.navigation.navigate('Home');
+  }
+
+  async editPactSave(pact: Pact): Promise<void> {
+    if (!pact.title || !pact.description) {
+      return;
+    }
+
+    await auth.updatePact(pact);
+    this.props.navigation.navigate('Home');
   }
 
   componentDidMount(): void {
-    // TODO: is this redundant?
     this.props.navigation.setParams({
-      title: this.state.pactParticipants === null ? 'Create Pact' : 'Edit Pact',
+      title: this.state.isNewPact ? 'Create Pact' : 'Edit Pact',
     });
   }
 
-  onPactNameChange = (pactName: string): void => {
-    this.setState({ pactName });
+  onTitleChange = (title: string): void => {
+    const { pact } = this.state;
+    pact.title = title;
+    this.setState({ pact });
   };
 
-  onDescChange = (pactDescription: string): void => {
-    this.setState({ pactDescription });
+  onDescChange = (description: string): void => {
+    const { pact } = this.state;
+    pact.description = description;
+    this.setState({ pact });
   };
 
   onFriendPress = (): void => {
@@ -152,34 +122,20 @@ class EditPact extends Component<Props, State> {
   };
 
   onSavePress = (): void => {
-    // const friend = '5rodgDHsVxPsmTlXXoTLdpzq7Iv2';
-
-    if (this.state.pactParticipants !== null) {
-      this.editPactSave(
-        /* this.state.pactId, this.state.pactName, this.state.pactDescription, friend */
-      );
+    if (this.state.isNewPact) {
+      this.createPactSave(this.state.pact);
     } else {
-      this.editPactCreate(/* this.state.pactName, this.state.pactDescription, friend */);
+      this.editPactSave(this.state.pact);
     }
-
-    this.props.navigation.pop();
   };
 
-  onDeletePress = (): void => {
-    // const dbRef = firebase.database().ref();
-    // // Remove pact from users' user-pact list
-    // const users = Object.keys(participants);
-    // dbRef.child('/user-pacts/' + users[0] + '/' + pactId).remove();
-    // dbRef.child('/user-pacts/' + users[1] + '/' + pactId).remove();
-    // // Remove pact data
-    // dbRef.child('/pacts/' + pactId).remove().then(() => {
-    //   dispatch({ type: EDIT_PACT_DELETE });
-    // NavigationService.navigate('Home');
-    // });
+  onDeletePress = async (): Promise<void> => {
+    await auth.deletePact(this.state.pact);
+    this.props.navigation.navigate('Home');
   };
 
   render(): JSX.Element {
-    const { pactName, pactDescription } = this.state;
+    const { title, description } = this.state.pact;
 
     return (
       <Fragment>
@@ -193,25 +149,22 @@ class EditPact extends Component<Props, State> {
               <Textbox
                 label="PACT NAME"
                 placeholder="Enter the name of your pact"
-                onChangeText={this.onPactNameChange}
-                value={pactName}
+                onChangeText={this.onTitleChange}
+                value={title}
               />
               <Textbox
                 label="DESCRIPTION"
                 placeholder="Describe what you will do"
                 onChangeText={this.onDescChange}
-                value={pactDescription}
+                value={description}
               />
               <TextboxLabel text="CHOOSE A FRIEND" />
               <RoundButton
                 mode="outlined"
                 title=""
-                icon="add"
                 onPress={this.onFriendPress}
                 style={styles.outlineButton}
               />
-              <TextboxLabel text="DAYS" />
-              <CircleButtons onPress={this.onDeletePress} />
               <TimePicker />
             </View>
             <View style={styles.roundSep}>
@@ -223,11 +176,13 @@ class EditPact extends Component<Props, State> {
                 title="SAVE"
                 onPress={this.onSavePress}
               />
-              <RoundButton
-                mode="outlined"
-                title="DELETE"
-                onPress={this.onDeletePress}
-              />
+              {!this.state.isNewPact
+                && <RoundButton
+                  mode="outlined"
+                  title="DELETE"
+                  onPress={this.onDeletePress}
+                />
+              }
             </View>
           </ScrollView>
         </SafeAreaView>
