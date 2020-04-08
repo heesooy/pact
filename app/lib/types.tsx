@@ -10,3 +10,12 @@ export type Pact = {
   tags: string[];
   status: string;
 };
+
+export type User = {
+  username: string;
+  firstName: string;
+  lastName: string;
+  location: string;
+  email: string;
+  userId: string;
+};

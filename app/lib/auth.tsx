@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import apiConfig from '../config/api';
-import { Pact } from './types';
+import { Pact, User } from './types';
 
 const authTokenKey = 'AUTH_TOKEN';
 
@@ -104,6 +104,37 @@ async function deletePact(pact: Pact): Promise<Readonly<{}> | null> {
   }
 }
 
+// TODO backend should handle only camelcase fields and return only camelcase fields
+function getFrontendUser(user: Record<string, any>): User {
+  return {
+    username: user.username,
+    firstName: user.firstname,
+    lastName: user.lastname,
+    location: user.location,
+    email: user.email,
+    userId: user.user_id,
+  };
+}
+
+async function getUserFriends(): Promise<User[] | null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.get(apiConfig.getUserFriendsUrl);
+    return response.data.friends.map((friend: Readonly<{}>) => getFrontendUser(friend));
+  } catch (error) {
+    return null;
+  }
+}
+
 export default {
   loginAttempt,
   getUserPacts,
@@ -111,4 +142,5 @@ export default {
   createPact,
   updatePact,
   deletePact,
+  getUserFriends,
 };
