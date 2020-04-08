@@ -6,6 +6,7 @@ const updatePactEndpoint = 'updatepact';
 const deletePactEndpoint = 'deletepact';
 const getPactInfoEndpoint = 'getpactinfo';
 const getUserPactsEndpoint = 'getuserpacts';
+const getUserFriendsEndpoint = 'friends';
 
 const apiConfig = {
   baseUrl,
@@ -16,6 +17,7 @@ const apiConfig = {
   deletePactUrl: baseUrl + deletePactEndpoint,
   getPactInfoUrl: baseUrl + getPactInfoEndpoint,
   getUserPactsUrl: baseUrl + getUserPactsEndpoint,
+  getUserFriendsUrl: baseUrl + getUserFriendsEndpoint,
 };
 
 export default apiConfig;
