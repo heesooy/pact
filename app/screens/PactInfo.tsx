@@ -17,6 +17,7 @@ import ActivityCircles from '../components/ActivityCircles';
 import TextboxLabel from '../components/TextboxLabel';
 import RoundedCard from '../components/RoundedCard';
 import waveBg from '../../assets/images/waveBG.png';
+import { Pact } from '../lib/types';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -87,7 +88,11 @@ type Props = {
   description: string;
 }
 
-class Pact extends Component<Props> {
+type State = {
+  pact: Pact;
+}
+
+class PactInfo extends Component<Props, State> {
   static navigationOptions = ({ navigation }: Props): {
     headerRight: () => JSX.Element;
     title: string;
@@ -102,30 +107,23 @@ class Pact extends Component<Props> {
     ),
   });
 
+  constructor(props: Props) {
+    super(props);
+
+    this.state = {
+      pact: this.props.navigation.getParam('pact'),
+    };
+  }
+
   componentDidMount(): void {
     this.props.navigation.setParams({
-      title: this.props.name,
+      title: this.state.pact.title,
       editPressed: this.editPressed,
     });
   }
 
   editPressed = (): void => {
-    // const {
-    //   navigation, pactId, name, description, participants,
-    // } = this.props;
-
-    // const pactInfo = {
-    //   pactId,
-    //   name,
-    //   description,
-    //   participants,
-    // };
-    // Load pact information to edit screen
-    // _.each(pactInfo, (value, prop) => {
-    //   this.props.editPactUpdate({ prop, value });
-    // });
-
-    this.props.navigation.navigate('EditPact');
+    this.props.navigation.navigate('EditPact', { pact: this.state.pact });
   };
 
   render(): JSX.Element {
@@ -166,4 +164,4 @@ class Pact extends Component<Props> {
   }
 }
 
-export default Pact;
+export default PactInfo;
