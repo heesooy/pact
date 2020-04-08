@@ -7,4 +7,6 @@ export type Pact = {
   privacyLevel: string;
   pactId: string;
   participants: string[];
+  tags: string[];
+  status: string;
 };

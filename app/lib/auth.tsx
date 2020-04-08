@@ -27,6 +27,8 @@ function getFrontendPact(pact: Record<string, any>): Pact {
     periodTarget: pact.period_target,
     privacyLevel: pact.privacy_level,
     participants: pact.participants,
+    tags: pact.tags,
+    status: pact.status,
   };
 }
 
@@ -35,12 +37,13 @@ function getBackendPact(pact: Pact): Readonly<{}> {
   return {
     title: pact.title,
     description: pact.description,
-    streak: pact.streak,
     pact_id: pact.pactId,
     period_length: pact.periodLength,
     period_target: pact.periodTarget,
     privacy_level: pact.privacyLevel,
     participants: pact.participants,
+    tags: pact.tags,
+    status: pact.status,
   };
 }
 

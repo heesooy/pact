@@ -71,11 +71,11 @@ class EditPact extends Component<Props, State> {
       pact: pact !== undefined ? pact : {
         title: '',
         description: '',
-        streak: 1,
         periodLength: 7,
         periodTarget: 5,
         privacyLevel: 'private',
-        participants: ['asherd', 'asherdale'],
+        participants: [],
+        tags: [],
       },
       isNewPact: !pact,
     };
