@@ -7,6 +7,11 @@ const deletePactEndpoint = 'deletepact';
 const getPactInfoEndpoint = 'getpactinfo';
 const getUserPactsEndpoint = 'getuserpacts';
 const getUserFriendsEndpoint = 'friends';
+const getUserFriendRequestsEndpoint = 'friends/request';
+const acceptFriendRequestEndpoint = 'friends/request/accept';
+const declineFriendRequestEndpoint = 'friends/request/decline';
+const sendFriendRequestEndpoint = 'friends/request/send';
+const searchUsersEndpoint = 'friends/search';
 
 const apiConfig = {
   baseUrl,
@@ -18,6 +23,11 @@ const apiConfig = {
   getPactInfoUrl: baseUrl + getPactInfoEndpoint,
   getUserPactsUrl: baseUrl + getUserPactsEndpoint,
   getUserFriendsUrl: baseUrl + getUserFriendsEndpoint,
+  getUserFriendRequestsUrl: baseUrl + getUserFriendRequestsEndpoint,
+  acceptFriendRequestUrl: baseUrl + acceptFriendRequestEndpoint,
+  declineFriendRequestUrl: baseUrl + declineFriendRequestEndpoint,
+  sendFriendRequestUrl: baseUrl + sendFriendRequestEndpoint,
+  searchUsersUrl: baseUrl + searchUsersEndpoint,
 };
 
 export default apiConfig;

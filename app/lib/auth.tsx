@@ -135,6 +135,101 @@ async function getUserFriends(): Promise<User[] | null> {
   }
 }
 
+async function getUserFriendRequests(): Promise<User[] | null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.get(apiConfig.getUserFriendRequestsUrl);
+    return response.data.requests.map((request: Readonly<{}>) => getFrontendUser(request));
+  } catch (error) {
+    return null;
+  }
+}
+
+async function acceptFriendRequest(userId: string): Promise<Readonly<{}> | null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.post(apiConfig.acceptFriendRequestUrl, { user_id: userId });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function declineFriendRequest(userId: string): Promise<Readonly<{}> | null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.post(apiConfig.declineFriendRequestUrl, { user_id: userId });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function sendFriendRequest(userId: string): Promise<Readonly<{}> | null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.post(apiConfig.sendFriendRequestUrl, { user_id: userId });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function getUserSuggestions(prefix: string): Promise<User[]| null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.get(`${apiConfig.searchUsersUrl}?prefix=${prefix}`);
+    return response.data.users.map((user: Readonly<{}>) => getFrontendUser(user));
+  } catch (error) {
+    return null;
+  }
+}
+
 export default {
   loginAttempt,
   getUserPacts,
@@ -143,4 +238,9 @@ export default {
   updatePact,
   deletePact,
   getUserFriends,
+  getUserFriendRequests,
+  acceptFriendRequest,
+  declineFriendRequest,
+  sendFriendRequest,
+  getUserSuggestions,
 };
