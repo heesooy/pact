@@ -5,6 +5,7 @@ import {
   FlatList,
 } from 'react-native';
 import { NavigationStackProp } from 'react-navigation-stack';
+import { withNavigationFocus } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { BACKGROUND_COLOR } from '../config/theme';
 import { User } from '../lib/types';
@@ -25,6 +26,7 @@ const styles = StyleSheet.create({
 
 type Props = {
   navigation: NavigationStackProp<{}>;
+  isFocused: boolean;
 }
 
 type State = {
@@ -60,6 +62,12 @@ class Friends extends Component<Props> {
     this.friendsFetch();
   }
 
+  componentDidUpdate(prevProps: Props): void {
+    if (!prevProps.isFocused && this.props.isFocused) {
+      this.friendsFetch();
+    }
+  }
+
   addPressed = (): void => {
     this.props.navigation.navigate('AddFriends');
   };
@@ -85,4 +93,4 @@ class Friends extends Component<Props> {
   }
 }
 
-export default Friends;
+export default withNavigationFocus(Friends);
