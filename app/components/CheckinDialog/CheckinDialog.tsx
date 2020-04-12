@@ -27,6 +27,11 @@ class CheckinDialog extends React.Component<Props, State> {
     this.setState({ isVisible: false });
   }
 
+  saveCheckin = (): void => {
+    // TODO create new pact activity
+    this.setState({ isVisible: false });
+  }
+
   render(): JSX.Element {
     return (
       <View>
@@ -49,7 +54,7 @@ class CheckinDialog extends React.Component<Props, State> {
               />
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={this.hideDialog} style={styles.button}>
+              <Button onPress={this.saveCheckin} style={styles.button}>
                 Done
               </Button>
             </Dialog.Actions>

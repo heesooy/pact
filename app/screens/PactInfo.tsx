@@ -13,7 +13,7 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { BACKGROUND_COLOR, PRIMARY_COLOR } from '../config/theme';
 import CheckinDialog from '../components/CheckinDialog';
-import ActivityCircles from '../components/ActivityCircles';
+import ParticipantActivity from '../components/ParticipantActivity';
 import TextboxLabel from '../components/TextboxLabel';
 import RoundedCard from '../components/RoundedCard';
 import waveBg from '../../assets/images/waveBG.png';
@@ -127,24 +127,18 @@ class PactInfo extends Component<Props, State> {
   };
 
   render(): JSX.Element {
+    const { description, participants,tags } = this.state.pact;
     return (
       <View style={styles.parentView}>
         <ScrollView contentContainerStyle={styles.container}>
           <View style={styles.whiteContainer}>
-            <View style={styles.todayLabel}>
-              <Text style={styles.todayLabelText}>TODAY</Text>
-              <Icon
-                name="chevron-down"
-                type="material-community"
-                color={PRIMARY_COLOR}
-              />
-            </View>
-            <ActivityCircles label="Person 1" />
-            <ActivityCircles label="Person 2" />
-            <Divider
-              style={styles.divider}
-            />
-            <Text style={styles.description}>{this.props.description}</Text>
+            <ParticipantActivity label={participants[0]} totalCheckins={0} />
+            {participants.length > 1
+              && <ParticipantActivity label={participants[1]} totalCheckins={0}/>
+            }
+            <Divider style={styles.divider} />
+            <Text style={styles.description}>{description}</Text>
+            <Text style={styles.description}>{`\nTags: ${tags.join(', ')}`}</Text>
           </View>
           <Image
             style={styles.bgImageContainer}
@@ -153,6 +147,11 @@ class PactInfo extends Component<Props, State> {
           />
           <View style={styles.bgContainer}>
             <TextboxLabel text="FEED" />
+            {/* TODO use flatlist (like in Home.tsx) to make scrollable list of roundedcards with checkin text, user & date */}
+            <RoundedCard text="Text" onPress={(): void => undefined} />
+            <RoundedCard text="Text" onPress={(): void => undefined} />
+            <RoundedCard text="Text" onPress={(): void => undefined} />
+            <RoundedCard text="Text" onPress={(): void => undefined} />
             <RoundedCard text="Text" onPress={(): void => undefined} />
             <RoundedCard text="Text" onPress={(): void => undefined} />
             <RoundedCard text="Text" onPress={(): void => undefined} />

@@ -20,7 +20,6 @@ export default StyleSheet.create({
     justifyContent: 'center',
   },
   text: {
-    color: '#FFF',
     fontSize: 16,
   },
 });
