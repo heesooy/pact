@@ -8,6 +8,7 @@ import styles from './styles';
 
 type Props = {
   onChangeText: () => void;
+  onSubmit: () => void;
 }
 
 type State = {
@@ -28,8 +29,8 @@ class CheckinDialog extends React.Component<Props, State> {
   }
 
   saveCheckin = (): void => {
-    // TODO create new pact activity
     this.setState({ isVisible: false });
+    this.props.onSubmit();
   }
 
   render(): JSX.Element {

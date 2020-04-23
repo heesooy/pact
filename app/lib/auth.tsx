@@ -87,8 +87,10 @@ async function updatePact(pact: Pact): Promise<Pact | null> {
 
   try {
     const response = await axios.put(apiConfig.updatePactUrl, pactToUpdate);
+    console.log(response.data);
     return response.data;
   } catch (error) {
+    console.log(error);
     return null;
   }
 }
@@ -230,6 +232,27 @@ async function getUserSuggestions(prefix: string): Promise<User[]| null> {
   }
 }
 
+async function getPactCheckins(pactId: string): Promise<Pact[] | null> {
+  try {
+    const response = await axios.post(apiConfig.getCheckinsUrl, { pact_id: pactId });
+    return response.data.checkIns;
+  } catch (error) {
+    return null;
+  }
+}
+
+async function createPactCheckin(pactId: string, comments: string): Promise<Pact[] | null> {
+  try {
+    const response = await axios.post(apiConfig.createCheckinUrl, {
+      pact_id: pactId,
+      comments,
+    });
+    return response.data;
+  } catch (error) {
+    return null;
+  }
+}
+
 export default {
   loginAttempt,
   getUserPacts,
@@ -243,4 +266,6 @@ export default {
   declineFriendRequest,
   sendFriendRequest,
   getUserSuggestions,
+  getPactCheckins,
+  createPactCheckin,
 };
