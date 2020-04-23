@@ -6,18 +6,21 @@ import {
   ScrollView,
   Image,
   Dimensions,
+  FlatList,
 } from 'react-native';
+import { withNavigationFocus } from 'react-navigation';
 import { Icon } from 'react-native-elements';
 import { Divider } from 'react-native-paper';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import { NavigationStackProp } from 'react-navigation-stack';
 import { BACKGROUND_COLOR, PRIMARY_COLOR } from '../config/theme';
 import CheckinDialog from '../components/CheckinDialog';
-import ActivityCircles from '../components/ActivityCircles';
+import ParticipantActivity from '../components/ParticipantActivity';
 import TextboxLabel from '../components/TextboxLabel';
-import RoundedCard from '../components/RoundedCard';
+import Checkin from '../components/Checkin';
 import waveBg from '../../assets/images/waveBG.png';
 import { Pact } from '../lib/types';
+import auth from '../lib/auth';
 
 const screenWidth = Dimensions.get('window').width;
 
@@ -90,6 +93,8 @@ type Props = {
 
 type State = {
   pact: Pact;
+  checkins: any[];
+  newCheckin: string;
 }
 
 class PactInfo extends Component<Props, State> {
@@ -120,48 +125,99 @@ class PactInfo extends Component<Props, State> {
       title: this.state.pact.title,
       editPressed: this.editPressed,
     });
+
+    this.checkinFetch();
+  }
+
+  componentDidUpdate(prevProps: Props): void {
+    if (!prevProps.isFocused && this.props.isFocused) {
+      this.checkinFetch();
+    }
+  }
+
+  checkinFetch = async (): Promise<void> => {
+    const checkins = await auth.getPactCheckins(this.state.pact.pactId);
+
+    if (!checkins) {
+      return;
+    }
+
+    this.setState({ checkins });
   }
 
   editPressed = (): void => {
     this.props.navigation.navigate('EditPact', { pact: this.state.pact });
   };
 
+  onNewCheckinChange = (newCheckin: string): void => {
+    this.setState({ newCheckin });
+  }
+
+  onCheckinSubmit = async (): void => {
+    const { pact, newCheckin } = this.state;
+
+    if (newCheckin) {
+      await auth.createPactCheckin(pact.pactId, newCheckin);
+      this.checkinFetch();
+    }
+  }
+
+  renderCheckin = ({ item, index }: {item: any; index: number}): JSX.Element => (
+    <Checkin checkin={item} />
+  );
+
   render(): JSX.Element {
+    const { description, participants, tags } = this.state.pact;
+
+    const numCheckins = {};
+
+    if (this.state.checkins) {
+      this.state.checkins.forEach((checkin: any) => {
+        if (checkin.username === participants[0]) {
+          numCheckins[participants[0]] = (numCheckins[participants[0]] || 0) + 1;
+        } else if (participants.length > 1 && checkin.username === participants[1]) {
+          numCheckins[participants[1]] = (numCheckins[participants[1]] || 0) + 1;
+        }
+      });
+    }
+
     return (
       <View style={styles.parentView}>
-        <ScrollView contentContainerStyle={styles.container}>
-          <View style={styles.whiteContainer}>
-            <View style={styles.todayLabel}>
-              <Text style={styles.todayLabelText}>TODAY</Text>
-              <Icon
-                name="chevron-down"
-                type="material-community"
-                color={PRIMARY_COLOR}
-              />
-            </View>
-            <ActivityCircles label="Person 1" />
-            <ActivityCircles label="Person 2" />
-            <Divider
-              style={styles.divider}
-            />
-            <Text style={styles.description}>{this.props.description}</Text>
-          </View>
-          <Image
-            style={styles.bgImageContainer}
-            source={waveBg}
-            resizeMode="contain"
+        <View style={styles.whiteContainer}>
+          <ParticipantActivity
+            label={participants[0]}
+            totalCheckins={numCheckins[participants[0]] || 0}
           />
-          <View style={styles.bgContainer}>
-            <TextboxLabel text="FEED" />
-            <RoundedCard text="Text" onPress={(): void => undefined} />
-            <RoundedCard text="Text" onPress={(): void => undefined} />
-            <RoundedCard text="Text" onPress={(): void => undefined} />
-          </View>
-        </ScrollView>
-        <CheckinDialog onChangeText={(): void => undefined} />
+
+          {participants.length > 1
+            && <ParticipantActivity
+              label={participants[1]}
+              totalCheckins={numCheckins[participants[1]] || 0}
+            />
+          }
+
+          <Divider style={styles.divider} />
+          <Text style={styles.description}>{description}</Text>
+          {(tags && tags.length > 0) && <Text style={styles.description}>{`\nTags: ${tags.join(', ')}`}</Text>}
+        </View>
+        <Image
+          style={styles.bgImageContainer}
+          source={waveBg}
+          resizeMode="contain"
+        />
+        <View style={styles.bgContainer}>
+          <TextboxLabel text="FEED" />
+          <FlatList
+            contentContainerStyle={styles.container}
+            data={this.state.checkins}
+            renderItem={this.renderCheckin}
+            keyExtractor={(item: any): string => item.event_id}
+          />
+        </View>
+        <CheckinDialog onSubmit={this.onCheckinSubmit} onChangeText={this.onNewCheckinChange} />
       </View>
     );
   }
 }
 
-export default PactInfo;
+export default withNavigationFocus(PactInfo);

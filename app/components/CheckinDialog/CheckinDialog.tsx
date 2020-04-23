@@ -8,6 +8,7 @@ import styles from './styles';
 
 type Props = {
   onChangeText: () => void;
+  onSubmit: () => void;
 }
 
 type State = {
@@ -25,6 +26,11 @@ class CheckinDialog extends React.Component<Props, State> {
 
   hideDialog = (): void => {
     this.setState({ isVisible: false });
+  }
+
+  saveCheckin = (): void => {
+    this.setState({ isVisible: false });
+    this.props.onSubmit();
   }
 
   render(): JSX.Element {
@@ -49,7 +55,7 @@ class CheckinDialog extends React.Component<Props, State> {
               />
             </Dialog.Content>
             <Dialog.Actions>
-              <Button onPress={this.hideDialog} style={styles.button}>
+              <Button onPress={this.saveCheckin} style={styles.button}>
                 Done
               </Button>
             </Dialog.Actions>

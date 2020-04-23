@@ -43,7 +43,6 @@ class AddFriends extends Component<Props> {
 
   async requestsFetch(): Promise<void> {
     const requests = await auth.getUserFriendRequests();
-    console.log(requests);
 
     if (!requests) {
       return;
@@ -53,7 +52,6 @@ class AddFriends extends Component<Props> {
 
   async suggestionsFetch(prefix: string): Promise<void> {
     const suggestions = await auth.getUserSuggestions(prefix);
-    console.log(suggestions);
 
     if (!suggestions) {
       return;

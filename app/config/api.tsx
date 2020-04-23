@@ -12,6 +12,8 @@ const acceptFriendRequestEndpoint = 'friends/request/accept';
 const declineFriendRequestEndpoint = 'friends/request/decline';
 const sendFriendRequestEndpoint = 'friends/request/send';
 const searchUsersEndpoint = 'friends/search';
+const getCheckinsEndpoint = 'pact/getcheckins';
+const createCheckinEndpoint = 'pact/checkin';
 
 const apiConfig = {
   baseUrl,
@@ -28,6 +30,8 @@ const apiConfig = {
   declineFriendRequestUrl: baseUrl + declineFriendRequestEndpoint,
   sendFriendRequestUrl: baseUrl + sendFriendRequestEndpoint,
   searchUsersUrl: baseUrl + searchUsersEndpoint,
+  getCheckinsUrl: baseUrl + getCheckinsEndpoint,
+  createCheckinUrl: baseUrl + createCheckinEndpoint,
 };
 
 export default apiConfig;

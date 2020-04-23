@@ -41,7 +41,7 @@ class AuthLoading extends Component<Props> {
   }
 
   async redirect(): Promise<void> {
-    const isLoggedIn = auth.getUserPacts();
+    const isLoggedIn = await auth.getUserPacts();
     this.props.navigation.navigate(isLoggedIn ? 'Home' : 'Auth');
   }
 

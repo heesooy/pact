@@ -16,10 +16,20 @@ export default StyleSheet.create({
     width: '100%',
     height: circleSize,
     borderRadius: circleSize / 2,
-    alignItems: 'center',
+    alignItems: 'flex-start',
+    justifyContent: 'flex-start',
+    paddingLeft: '8%',
+  },
+  innerView: {
     justifyContent: 'center',
   },
-  text: {
-    fontSize: 16,
+  checkinMeta: {
+    fontSize: 14,
+    marginTop: '3%',
+    color: 'gray',
+  },
+  checkinText: {
+    marginTop: '5%',
+    fontSize: 18,
   },
 });
