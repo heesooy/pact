@@ -19,3 +19,9 @@ export type User = {
   email: string;
   userId: string;
 };
+
+export type FriendSuggestion = {
+  user: User;
+  mutual: number;
+  common: string;
+};
