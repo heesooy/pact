@@ -17,6 +17,7 @@ const theme = {
 
 class App extends Component {
   render(): JSX.Element {
+    console.disableYellowBox = true;
     return (
       <PaperProvider theme={theme}>
         <AppContainer

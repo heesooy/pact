@@ -3,22 +3,28 @@ import {
   StyleSheet,
   FlatList,
 } from 'react-native';
-import { Searchbar } from 'react-native-paper';
+import { Searchbar, Subheading } from 'react-native-paper';
 import { NavigationStackProp } from 'react-navigation-stack';
+import { ScrollView } from 'react-native-gesture-handler';
 import { BACKGROUND_COLOR } from '../config/theme';
-import { User } from '../lib/types';
+import { User, FriendSuggestion } from '../lib/types';
 import FriendRequestCard from '../components/FriendRequestCard';
 import auth from '../lib/auth';
+import FriendSuggestionCard from '../components/FriendSuggestionCard';
 
 const styles = StyleSheet.create({
   container: {
     backgroundColor: BACKGROUND_COLOR,
     flexDirection: 'column',
-    justifyContent: 'space-between',
     padding: 15,
+    // justifyContent: 'space-between',
   },
   headerRight: {
     marginRight: 20,
+  },
+  text: {
+    marginVertical: 4,
+    marginLeft: 4,
   },
 });
 
@@ -30,7 +36,8 @@ type State = {
   currentlySearching: boolean;
   requests: User[];
   searchQuery: string;
-  suggestions: User[];
+  searchResults: User[];
+  suggestions: FriendSuggestion[];
 }
 
 class AddFriends extends Component<Props> {
@@ -38,6 +45,7 @@ class AddFriends extends Component<Props> {
     currentlySearching: false,
     requests: [],
     searchQuery: '',
+    searchResults: [],
     suggestions: [],
   };
 
@@ -50,17 +58,28 @@ class AddFriends extends Component<Props> {
     this.setState({ requests });
   }
 
-  async suggestionsFetch(prefix: string): Promise<void> {
-    const suggestions = await auth.getUserSuggestions(prefix);
+  async searchFetch(prefix: string): Promise<void> {
+    const searchResults = await auth.getUserSearch(prefix);
+
+    if (!searchResults) {
+      return;
+    }
+    this.setState({ searchResults });
+  }
+
+  async suggestionsFetch(): Promise<void> {
+    const suggestions = await auth.getFriendSuggestions();
 
     if (!suggestions) {
       return;
     }
+
     this.setState({ suggestions });
   }
 
   componentDidMount(): void {
     this.requestsFetch();
+    this.suggestionsFetch();
   }
 
   acceptRequest = (userId: string): void => {
@@ -81,25 +100,39 @@ class AddFriends extends Component<Props> {
   onChangeSearch = (searchQuery: string): void => {
     this.setState({ searchQuery });
     if (searchQuery.length > 0) {
-      this.suggestionsFetch(searchQuery);
+      this.searchFetch(searchQuery);
       this.setState({ currentlySearching: true });
     } else {
-      this.setState({ currentlySearching: false });
+      this.setState({ currentlySearching: false, searchResults: [] });
     }
   };
 
-  renderItem = ({ item, index }: {item: User; index: number}): JSX.Element => (
+  doesRequestExist = (userId: string): boolean => (
+    this.state.requests.some((request: User): boolean => request.userId === userId)
+  );
+
+  renderRequest = ({ item, index }: {item: User; index: number}): JSX.Element => (
     <FriendRequestCard
       accept={(): void => this.acceptRequest(item.userId)}
       decline={(): void => this.declineRequest(item.userId)}
       sendRequest={(): void => this.sendRequest(item.userId)}
-      isExistingRequest={this.state.currentlySearching}
-      title={`${item.firstName} ${item.lastName}`}
-      subtitle={item.username}
-      initials={`${item.firstName[0]}${item.lastName[0]}`}
+      isExistingRequest={this.doesRequestExist(item.userId)}
+      user={item}
     />
   );
 
+  renderSuggestion = ({ item, index }: {item: FriendSuggestion; index: number}): JSX.Element => (
+    <FriendSuggestionCard
+      accept={(): void => this.acceptRequest(item.user.userId)}
+      decline={(): void => this.declineRequest(item.user.userId)}
+      sendRequest={(): void => this.sendRequest(item.user.userId)}
+      isExistingRequest={this.doesRequestExist(item.user.userId)}
+      suggestion={item}
+    />
+  );
+
+  // TODO: FlatList should not be contained in a scroll view,
+  // should use SectionList instead for multiple lists with titles
   render(): JSX.Element {
     return (
       <Fragment>
@@ -108,12 +141,40 @@ class AddFriends extends Component<Props> {
           onChangeText={this.onChangeSearch}
           value={this.state.searchQuery}
         />
-        <FlatList
-          contentContainerStyle={styles.container}
-          data={this.state.currentlySearching ? this.state.suggestions : this.state.requests}
-          renderItem={this.renderItem}
-          keyExtractor={(item: User): string => item.userId}
-        />
+        {this.state.currentlySearching
+          && <FlatList
+            contentContainerStyle={styles.container}
+            data={this.state.searchResults}
+            renderItem={this.renderRequest}
+            keyExtractor={(item: User): string => item.userId}
+          />
+        }
+        <ScrollView>
+          {(this.state.requests && !this.state.currentlySearching)
+            && <Fragment>
+              <Subheading style={styles.text}>Friend Requests</Subheading>
+              <FlatList
+                contentContainerStyle={styles.container}
+                data={this.state.requests}
+                renderItem={this.renderRequest}
+                scrollEnabled={false}
+                keyExtractor={(item: User): string => item.userId}
+              />
+            </Fragment>
+          }
+          {(this.state.suggestions && !this.state.currentlySearching)
+            && <Fragment>
+              <Subheading style={styles.text}>Friend Suggestions</Subheading>
+              <FlatList
+                contentContainerStyle={styles.container}
+                data={this.state.suggestions}
+                renderItem={this.renderSuggestion}
+                scrollEnabled={false}
+                keyExtractor={(item: FriendSuggestion): string => item.user.userId}
+              />
+            </Fragment>
+          }
+        </ScrollView>
       </Fragment>
     );
   }

@@ -1,32 +1,41 @@
 import React, { Fragment } from 'react';
 import { ViewStyle } from 'react-native';
-import { Avatar, Button, Card } from 'react-native-paper';
+import {
+  Avatar,
+  Button,
+  Card,
+  Paragraph,
+} from 'react-native-paper';
 import styles from './styles';
-import { User } from '../../lib/types';
+import { FriendSuggestion } from '../../lib/types';
 
 type Props = {
   accept: () => void;
   decline: () => void;
   sendRequest: () => void;
   isExistingRequest: boolean;
-  user: User;
+  suggestion: FriendSuggestion;
   style?: ViewStyle;
 }
 
-const FriendRequestCard: React.FC<Props> = ({
-  accept, decline, sendRequest, isExistingRequest, user, style,
+const FriendSuggestionCard: React.FC<Props> = ({
+  accept, decline, sendRequest, isExistingRequest, suggestion, style,
 }) => (
   <Card
     style={[styles.container, style]}
     theme={{ roundness: 0 }}>
     <Card.Title
-      title={`${user.firstName} ${user.lastName}`}
-      subtitle={user.username}
+      title={`${suggestion.user.firstName} ${suggestion.user.lastName}`}
+      subtitle={suggestion.user.username}
       left={(): JSX.Element => (
         // <Avatar.Icon {...props} color="#fff" icon="face" />
-        <Avatar.Text color="#FFF" size={40} label={`${user.firstName[0]}${user.lastName[0]}`} />
+        <Avatar.Text color="#FFF" size={40} label={`${suggestion.user.firstName[0]}${suggestion.user.lastName[0]}`} />
       )}
     />
+    <Card.Content>
+      {suggestion.mutual > 0 && <Paragraph>{suggestion.mutual} mutual friends</Paragraph>}
+      {suggestion.common !== '' && <Paragraph>Common pact tag: {suggestion.common}</Paragraph>}
+    </Card.Content>
     <Card.Actions>
       {isExistingRequest
         && <Fragment>
@@ -47,4 +56,4 @@ const FriendRequestCard: React.FC<Props> = ({
   </Card>
 );
 
-export default FriendRequestCard;
+export default FriendSuggestionCard;

@@ -1,7 +1,7 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-community/async-storage';
 import apiConfig from '../config/api';
-import { Pact, User } from './types';
+import { Pact, User, FriendSuggestion } from './types';
 
 const authTokenKey = 'AUTH_TOKEN';
 
@@ -213,7 +213,7 @@ async function sendFriendRequest(userId: string): Promise<Readonly<{}> | null> {
   }
 }
 
-async function getUserSuggestions(prefix: string): Promise<User[]| null> {
+async function getUserSearch(prefix: string): Promise<User[]| null> {
   try {
     if (!axios.defaults.headers.common.Authorization) {
       const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
@@ -228,6 +228,27 @@ async function getUserSuggestions(prefix: string): Promise<User[]| null> {
     const response = await axios.get(`${apiConfig.searchUsersUrl}?prefix=${prefix}`);
     return response.data.users.map((user: Readonly<{}>) => getFrontendUser(user));
   } catch (error) {
+    return null;
+  }
+}
+
+async function getFriendSuggestions(): Promise<FriendSuggestion[]| null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+
+      if (storedAuthToken === null) {
+        return null;
+      }
+
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+
+    const response = await axios.get(`${apiConfig.getFriendSuggestionsUrl}?limit=20`);
+    return response.data.users.map((suggestion: Record<string, any>) => (
+      { user: getFrontendUser(suggestion), mutual: suggestion.mutual, common: suggestion.common }));
+  } catch (error) {
+    console.error(error);
     return null;
   }
 }
@@ -265,7 +286,8 @@ export default {
   acceptFriendRequest,
   declineFriendRequest,
   sendFriendRequest,
-  getUserSuggestions,
+  getUserSearch,
+  getFriendSuggestions,
   getPactCheckins,
   createPactCheckin,
 };
