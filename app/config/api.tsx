@@ -1,6 +1,7 @@
 const baseUrl = 'https://u6dmt1htic.execute-api.us-east-2.amazonaws.com/dev/';
 const loginEndpoint = 'login';
 const registerEndpoint = 'register';
+const getUserInfoEndpoint = 'getuserinfo';
 const createPactEndpoint = 'createpact';
 const updatePactEndpoint = 'updatepact';
 const deletePactEndpoint = 'deletepact';
@@ -20,6 +21,7 @@ const apiConfig = {
   baseUrl,
   loginUrl: baseUrl + loginEndpoint,
   registerUrl: baseUrl + registerEndpoint,
+  getUserInfoUrl: baseUrl + getUserInfoEndpoint,
   createPactUrl: baseUrl + createPactEndpoint,
   updatePactUrl: baseUrl + updatePactEndpoint,
   deletePactUrl: baseUrl + deletePactEndpoint,

@@ -16,6 +16,24 @@ async function loginAttempt(email: string, password: string): Promise<boolean | 
   }
 }
 
+async function registerAttempt(firstname: string, lastname: string, username: string,
+  email: string, password: string, location: string): Promise<boolean | null> {
+  try {
+    const response = await axios.post(apiConfig.registerUrl, {
+      firstname,
+      lastname,
+      username,
+      email,
+      password,
+      location,
+    });
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    return false;
+  }
+}
+
 // TODO backend should handle only camelcase fields and return only camelcase fields
 function getFrontendPact(pact: Record<string, any>): Pact {
   return {
@@ -118,6 +136,22 @@ function getFrontendUser(user: Record<string, any>): User {
   };
 }
 
+async function getUserInfo(): Promise<User | null> {
+  try {
+    if (!axios.defaults.headers.common.Authorization) {
+      const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
+      if (storedAuthToken === null) {
+        return null;
+      }
+      axios.defaults.headers.common.Authorization = storedAuthToken;
+    }
+    const response = await axios.get(apiConfig.getUserInfoUrl);
+    return getFrontendUser(response.data);
+  } catch (error) {
+    return null;
+  }
+}
+
 async function getUserFriends(): Promise<User[] | null> {
   try {
     if (!axios.defaults.headers.common.Authorization) {
@@ -141,14 +175,11 @@ async function getUserFriendRequests(): Promise<User[] | null> {
   try {
     if (!axios.defaults.headers.common.Authorization) {
       const storedAuthToken = await AsyncStorage.getItem(authTokenKey);
-
       if (storedAuthToken === null) {
         return null;
       }
-
       axios.defaults.headers.common.Authorization = storedAuthToken;
     }
-
     const response = await axios.get(apiConfig.getUserFriendRequestsUrl);
     return response.data.requests.map((request: Readonly<{}>) => getFrontendUser(request));
   } catch (error) {
@@ -276,6 +307,8 @@ async function createPactCheckin(pactId: string, comments: string): Promise<Pact
 
 export default {
   loginAttempt,
+  registerAttempt,
+  getUserInfo,
   getUserPacts,
   getPactInfo,
   createPact,
